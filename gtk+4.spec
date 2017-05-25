@@ -1,3 +1,4 @@
+# TODO: vulkan+glslc
 #
 # Conditional build:
 %bcond_without	apidocs		# gtk-doc build
@@ -6,7 +7,6 @@
 %bcond_without	papi		# PAPI print backend
 %bcond_without	broadway	# Broadway target
 %bcond_with	mir		# Mir target
-%bcond_with	typeahead	# Typeahead in open dialog
 %bcond_without	wayland		# Wayland target
 %bcond_without	static_libs	# static library build
 
@@ -18,15 +18,14 @@ Summary(fr.UTF-8):	Le toolkit de GIMP
 Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
-Name:		gtk+3
-Version:	3.22.15
+Name:		gtk+4
+Version:	3.90.0
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk+/3.22/gtk+-%{version}.tar.xz
-# Source0-md5:	9a1177854c4c5609293e017c53bc8950
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk+/3.90/gtk+-%{version}.tar.xz
+# Source0-md5:	38df8442d7a5b96fe02e245c4f03a5e1
 Patch0:		%{name}-papi.patch
-Patch1:		typeahead.patch
 URL:		http://www.gtk.org/
 BuildRequires:	at-spi2-atk-devel >= 2.6.0
 BuildRequires:	atk-devel >= 1:2.16.0
@@ -42,11 +41,12 @@ BuildRequires:	docbook-dtd412-xml
 BuildRequires:	docbook-style-xsl
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.0
 BuildRequires:	gettext-tools >= 0.19.7
-BuildRequires:	glib2-devel >= 1:2.50.0
+BuildRequires:	glib2-devel >= 1:2.51.5
 BuildRequires:	gobject-introspection-devel >= 1.39.0
+BuildRequires:	graphene-devel >= 1.5.1
 %if %{with apidocs}
-BuildRequires:	gtk-doc >= 1.20
-BuildRequires:	gtk-doc-automake >= 1.20
+BuildRequires:	gtk-doc >= 1.25-2
+BuildRequires:	gtk-doc-automake >= 1.25-2
 %endif
 BuildRequires:	harfbuzz-devel >= 0.9
 %{?with_cloudprint:BuildRequires:	json-glib-devel >= 1.0}
@@ -87,11 +87,12 @@ BuildRequires:	wayland-protocols >= 1.7
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	xorg-lib-libX11 >= 1.5.0
-Requires(post,postun):	glib2 >= 1:2.50.0
+Requires(post,postun):	glib2 >= 1:2.51.5
 Requires:	atk >= 1:2.16.0
 Requires:	cairo-gobject >= 1.14.0
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.50.0
+Requires:	glib2 >= 1:2.51.5
+Requires:	graphene >= 1.5.1
 Requires:	libepoxy >= 1.0
 Requires:	pango >= 1:1.38.0
 Requires:	xorg-lib-libXi >= 1.3.0
@@ -108,7 +109,7 @@ Suggests:	%{name}-cups = %{version}-%{release}
 %endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		abivers	3.0.0
+%define		abivers	4.0.0
 
 %if "%{_lib}" != "lib"
 %define		libext		%(lib="%{_lib}"; echo ${lib#lib})
@@ -159,17 +160,17 @@ rodzaju kontrolek służących do tworzenia interfejsu użytkownika.
 Başlangıçta GIMP için yazılmış X kitaplıkları. Şu anda başka
 programlarca da kullanılmaktadır.
 
-%package -n gtk-update-icon-cache
+%package update-icon-cache
 Summary:	Utility to update icon cache used by GTK+ library
 Summary(pl.UTF-8):	Narzędzie do uaktualniania cache'a ikon używanego przez bibliotekę GTK+
 Group:		Applications/System
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.50.0
+Requires:	glib2 >= 1:2.51.5
 
-%description -n gtk-update-icon-cache
+%description update-icon-cache
 Utility to update icon cache used by GTK+ library.
 
-%description -n gtk-update-icon-cache -l pl.UTF-8
+%description update-icon-cache -l pl.UTF-8
 Narzędzie do uaktualniania cache'a ikon używanego przez bibliotekę
 GTK+.
 
@@ -189,7 +190,8 @@ Requires:	at-spi2-atk-devel >= 2.6.0
 Requires:	atk-devel >= 1:2.16.0
 Requires:	cairo-gobject-devel >= 1.14.0
 Requires:	gdk-pixbuf2-devel >= 2.31.0
-Requires:	glib2-devel >= 1:2.50.0
+Requires:	glib2-devel >= 1:2.51.5
+Requires:	graphene-devel >= 1.5.1
 Requires:	pango-devel >= 1:1.38.0
 Requires:	shared-mime-info
 
@@ -230,7 +232,7 @@ Dokumentacja API GTK+.
 Summary:	GTK+ - example programs
 Summary(pl.UTF-8):	GTK+ - programy przykładowe
 Group:		X11/Development/Libraries
-Requires(post,postun):	glib2 >= 1:2.50.0
+Requires(post,postun):	glib2 >= 1:2.51.5
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description examples
@@ -279,9 +281,6 @@ Moduł GTK+ do drukowania przez PAPI.
 %prep
 %setup -q -n gtk+-%{version}
 %patch0 -p1
-%if %{with typeahead}
-%patch1 -p1
-%endif
 
 # for packaging clean examples
 # TODO: add am patch to do it like demos/gtk-demo via some configurable dir
@@ -322,27 +321,27 @@ CPPFLAGS="%{rpmcppflags}%{?with_papi: -I/usr/include/papi}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/%{abivers}/engines
-install -d $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/%{abivers}/theming-engines
+install -d $RPM_BUILD_ROOT%{_libdir}/gtk-4.0/%{abivers}/engines
+install -d $RPM_BUILD_ROOT%{_libdir}/gtk-4.0/%{abivers}/theming-engines
 
 %{__make} install \
 	democodedir=%{_examplesdir}/%{name}-%{version}/demos/gtk-demo \
 	DESTDIR=$RPM_BUILD_ROOT
 
-touch $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/%{abivers}/gtk.immodules
-install -d $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/modules
+touch $RPM_BUILD_ROOT%{_libdir}/gtk-4.0/%{abivers}/gtk.immodules
+install -d $RPM_BUILD_ROOT%{_libdir}/gtk-4.0/modules
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 cp -a _examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 # shut up check-files (static modules and *.la for modules)
-%{__rm} -r $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/%{abivers}/*/*.la \
-	%{?with_static_libs:$RPM_BUILD_ROOT%{_libdir}/gtk-3.0/%{abivers}/*/*.a}
+%{__rm} -r $RPM_BUILD_ROOT%{_libdir}/gtk-4.0/%{abivers}/*/*.la \
+	%{?with_static_libs:$RPM_BUILD_ROOT%{_libdir}/gtk-4.0/%{abivers}/*/*.a}
 
 %if "%{_lib}" != "lib"
 # We need to have 32-bit and 64-bit binaries as they have hardcoded LIBDIR.
 # (needed when multilib is used)
-mv $RPM_BUILD_ROOT%{_bindir}/gtk-query-immodules-3.0{,%{pqext}}
+%{__mv} $RPM_BUILD_ROOT%{_bindir}/gtk4-query-immodules{,%{pqext}}
 %endif
 
 %{__mv} $RPM_BUILD_ROOT%{_localedir}/{sr@ije,sr@ijekavian}
@@ -353,7 +352,7 @@ mv $RPM_BUILD_ROOT%{_bindir}/gtk-query-immodules-3.0{,%{pqext}}
 
 %find_lang %{name} --all-name
 
-%{!?with_apidocs:%{__rm} -r $RPM_BUILD_ROOT%{_gtkdocdir}/{gdk3,gtk3}}
+%{!?with_apidocs:%{__rm} -r $RPM_BUILD_ROOT%{_gtkdocdir}/{gdk4,gtk4}}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -362,14 +361,14 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/ldconfig
 %glib_compile_schemas
 umask 022
-%{_bindir}/gtk-query-immodules-3.0%{pqext} --update-cache
+%{_bindir}/gtk4-query-immodules%{pqext} --update-cache
 exit 0
 
 %postun
 /sbin/ldconfig
 if [ "$1" != "0" ]; then
 	umask 022
-	%{_bindir}/gtk-query-immodules-3.0%{pqext} --update-cache
+	%{_bindir}/gtk4-query-immodules%{pqext} --update-cache
 else
 	%glib_compile_schemas
 fi
@@ -384,152 +383,139 @@ exit 0
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS NEWS README
-%{?with_broadway:%attr(755,root,root) %{_bindir}/broadwayd}
-%attr(755,root,root) %{_bindir}/gtk-launch
-%attr(755,root,root) %{_bindir}/gtk-query-immodules-3.0%{pqext}
-%attr(755,root,root) %{_libdir}/libgailutil-3.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgailutil-3.so.0
-%attr(755,root,root) %{_libdir}/libgdk-3.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgdk-3.so.0
-%attr(755,root,root) %{_libdir}/libgtk-3.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgtk-3.so.0
+%{?with_broadway:%attr(755,root,root) %{_bindir}/gtk4-broadwayd}
+%attr(755,root,root) %{_bindir}/gtk4-launch
+%attr(755,root,root) %{_bindir}/gtk4-query-immodules%{pqext}
+%attr(755,root,root) %{_libdir}/libgtk-4.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgtk-4.so.0
 
-%dir %{_libdir}/gtk-3.0
-%dir %{_libdir}/gtk-3.0/modules
-%dir %{_libdir}/gtk-3.0/%{abivers}
-%dir %{_libdir}/gtk-3.0/%{abivers}/engines
-%dir %{_libdir}/gtk-3.0/%{abivers}/theming-engines
-%dir %{_libdir}/gtk-3.0/%{abivers}/immodules
-%dir %{_libdir}/gtk-3.0/%{abivers}/printbackends
-%ghost %{_libdir}/gtk-3.0/%{abivers}/gtk.immodules
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/printbackends/libprintbackend-file.so
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/printbackends/libprintbackend-lpr.so
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/immodules/im-am-et.so
-%{?with_broadway:%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/immodules/im-broadway.so}
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/immodules/im-cedilla.so
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/immodules/im-cyrillic-translit.so
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/immodules/im-inuktitut.so
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/immodules/im-ipa.so
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/immodules/im-multipress.so
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/immodules/im-thai.so
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/immodules/im-ti-er.so
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/immodules/im-ti-et.so
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/immodules/im-viqr.so
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/immodules/im-xim.so
-%{_libdir}/girepository-1.0/Gdk-3.0.typelib
-%{_libdir}/girepository-1.0/GdkX11-3.0.typelib
-%{_libdir}/girepository-1.0/Gtk-3.0.typelib
+%dir %{_libdir}/gtk-4.0
+%dir %{_libdir}/gtk-4.0/modules
+%dir %{_libdir}/gtk-4.0/%{abivers}
+%dir %{_libdir}/gtk-4.0/%{abivers}/engines
+%dir %{_libdir}/gtk-4.0/%{abivers}/theming-engines
+%dir %{_libdir}/gtk-4.0/%{abivers}/immodules
+%dir %{_libdir}/gtk-4.0/%{abivers}/printbackends
+%ghost %{_libdir}/gtk-4.0/%{abivers}/gtk.immodules
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-file.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-lpr.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/immodules/im-am-et.so
+%{?with_broadway:%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/immodules/im-broadway.so}
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/immodules/im-cedilla.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/immodules/im-cyrillic-translit.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/immodules/im-inuktitut.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/immodules/im-ipa.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/immodules/im-multipress.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/immodules/im-thai.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/immodules/im-ti-er.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/immodules/im-ti-et.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/immodules/im-viqr.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/immodules/im-xim.so
+%{_libdir}/girepository-1.0/Gdk-4.0.typelib
+%{_libdir}/girepository-1.0/GdkX11-4.0.typelib
+%{_libdir}/girepository-1.0/Gsk-4.0.typelib
+%{_libdir}/girepository-1.0/Gtk-4.0.typelib
 
-%dir %{_sysconfdir}/gtk-3.0
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/gtk-3.0/im-multipress.conf
+%dir %{_sysconfdir}/gtk-4.0
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/gtk-4.0/im-multipress.conf
 %{_datadir}/glib-2.0/schemas/org.gtk.Settings.ColorChooser.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.Settings.Debug.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.Settings.FileChooser.gschema.xml
-%dir %{_datadir}/themes/Default/gtk-3.0
-%{_datadir}/themes/Default/gtk-3.0/gtk-keys.css
+%dir %{_datadir}/themes/Default/gtk-4.0
+%{_datadir}/themes/Default/gtk-4.0/gtk-keys.css
 %dir %{_datadir}/themes/Emacs
-%dir %{_datadir}/themes/Emacs/gtk-3.0
-%{_datadir}/themes/Emacs/gtk-3.0/gtk-keys.css
-%{?with_broadway:%{_mandir}/man1/broadwayd.1*}
-%{_mandir}/man1/gtk-launch.1*
-%{_mandir}/man1/gtk-query-immodules-3.0.1*
+%dir %{_datadir}/themes/Emacs/gtk-4.0
+%{_datadir}/themes/Emacs/gtk-4.0/gtk-keys.css
+%{?with_broadway:%{_mandir}/man1/gtk4-broadwayd.1*}
+%{_mandir}/man1/gtk4-launch.1*
+%{_mandir}/man1/gtk4-query-immodules.1*
 
-%files -n gtk-update-icon-cache
+%files update-icon-cache
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/gtk-encode-symbolic-svg
-%attr(755,root,root) %{_bindir}/gtk-update-icon-cache
-%{_mandir}/man1/gtk-encode-symbolic-svg.1*
-%{_mandir}/man1/gtk-update-icon-cache.1*
+%attr(755,root,root) %{_bindir}/gtk4-encode-symbolic-svg
+%attr(755,root,root) %{_bindir}/gtk4-update-icon-cache
+%{_mandir}/man1/gtk4-encode-symbolic-svg.1*
+%{_mandir}/man1/gtk4-update-icon-cache.1*
 
 %files devel
 %defattr(644,root,root,755)
 %doc ChangeLog
-%attr(755,root,root) %{_bindir}/gtk-builder-tool
-%attr(755,root,root) %{_bindir}/gtk-query-settings
-%attr(755,root,root) %{_libdir}/libgailutil-3.so
-%attr(755,root,root) %{_libdir}/libgdk-3.so
-%attr(755,root,root) %{_libdir}/libgtk-3.so
-%{_includedir}/gail-3.0
-%{_includedir}/gtk-3.0
-%{_aclocaldir}/gtk-3.0.m4
-%{_pkgconfigdir}/gail-3.0.pc
-%{_pkgconfigdir}/gdk-3.0.pc
-%{_pkgconfigdir}/gdk-x11-3.0.pc
-%{_pkgconfigdir}/gtk+-3.0.pc
-%{_pkgconfigdir}/gtk+-unix-print-3.0.pc
-%{_pkgconfigdir}/gtk+-x11-3.0.pc
+%attr(755,root,root) %{_bindir}/gtk4-builder-tool
+%attr(755,root,root) %{_bindir}/gtk4-query-settings
+%attr(755,root,root) %{_libdir}/libgtk-4.so
+%{_includedir}/gtk-4.0
+%{_pkgconfigdir}/gail-4.0.pc
+%{_pkgconfigdir}/gtk+-4.0.pc
+%{_pkgconfigdir}/gtk+-unix-print-4.0.pc
+%{_pkgconfigdir}/gtk+-x11-4.0.pc
 %if %{with broadway}
-%{_pkgconfigdir}/gdk-broadway-3.0.pc
-%{_pkgconfigdir}/gtk+-broadway-3.0.pc
+%{_pkgconfigdir}/gtk+-broadway-4.0.pc
 %endif
 %if %{with mir}
-%{_pkgconfigdir}/gdk-mir-3.0.pc
-%{_pkgconfigdir}/gtk+-mir-3.0.pc
+%{_pkgconfigdir}/gtk+-mir-4.0.pc
 %endif
 %if %{with wayland}
-%{_pkgconfigdir}/gdk-wayland-3.0.pc
-%{_pkgconfigdir}/gtk+-wayland-3.0.pc
+%{_pkgconfigdir}/gtk+-wayland-4.0.pc
 %endif
 %{_datadir}/gettext/its/gtkbuilder.its
 %{_datadir}/gettext/its/gtkbuilder.loc
-%{_datadir}/gtk-3.0
-%{_datadir}/gir-1.0/Gdk-3.0.gir
-%{_datadir}/gir-1.0/GdkX11-3.0.gir
-%{_datadir}/gir-1.0/Gtk-3.0.gir
-%{_mandir}/man1/gtk-builder-tool.1*
-%{_mandir}/man1/gtk-query-settings.1*
+%{_datadir}/gtk-4.0
+%{_datadir}/gir-1.0/Gdk-4.0.gir
+%{_datadir}/gir-1.0/GdkX11-4.0.gir
+%{_datadir}/gir-1.0/Gsk-4.0.gir
+%{_datadir}/gir-1.0/Gtk-4.0.gir
+%{_mandir}/man1/gtk4-builder-tool.1*
+%{_mandir}/man1/gtk4-query-settings.1*
 
 %if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/libgailutil-3.a
-%{_libdir}/libgdk-3.a
-%{_libdir}/libgtk-3.a
+%{_libdir}/libgtk-4.a
 %endif
 
 %if %{with apidocs}
 %files apidocs
 %defattr(644,root,root,755)
-%{_gtkdocdir}/gail-libgail-util3
-%{_gtkdocdir}/gdk3
-%{_gtkdocdir}/gtk3
+%{_gtkdocdir}/gdk4
+%{_gtkdocdir}/gsk4
+%{_gtkdocdir}/gtk4
 %endif
 
 %files examples
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/gtk3-demo
-%attr(755,root,root) %{_bindir}/gtk3-demo-application
-%attr(755,root,root) %{_bindir}/gtk3-icon-browser
-%attr(755,root,root) %{_bindir}/gtk3-widget-factory
+%attr(755,root,root) %{_bindir}/gtk4-demo
+%attr(755,root,root) %{_bindir}/gtk4-demo-application
+%attr(755,root,root) %{_bindir}/gtk4-icon-browser
+%attr(755,root,root) %{_bindir}/gtk4-widget-factory
 %{_datadir}/glib-2.0/schemas/org.gtk.Demo.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.exampleapp.gschema.xml
-%{_desktopdir}/gtk3-demo.desktop
-%{_desktopdir}/gtk3-icon-browser.desktop
-%{_desktopdir}/gtk3-widget-factory.desktop
-%{_iconsdir}/hicolor/*/apps/gtk3-demo-symbolic.symbolic.png
-%{_iconsdir}/hicolor/*/apps/gtk3-demo.png
-%{_iconsdir}/hicolor/*/apps/gtk3-widget-factory-symbolic.symbolic.png
-%{_iconsdir}/hicolor/*/apps/gtk3-widget-factory.png
-%{_mandir}/man1/gtk3-demo.1*
-%{_mandir}/man1/gtk3-demo-application.1*
-%{_mandir}/man1/gtk3-icon-browser.1*
-%{_mandir}/man1/gtk3-widget-factory.1*
+%{_desktopdir}/gtk4-demo.desktop
+%{_desktopdir}/gtk4-icon-browser.desktop
+%{_desktopdir}/gtk4-widget-factory.desktop
+%{_iconsdir}/hicolor/*/apps/gtk4-demo-symbolic.symbolic.png
+%{_iconsdir}/hicolor/*/apps/gtk4-demo.png
+%{_iconsdir}/hicolor/*/apps/gtk4-widget-factory-symbolic.symbolic.png
+%{_iconsdir}/hicolor/*/apps/gtk4-widget-factory.png
+%{_mandir}/man1/gtk4-demo.1*
+%{_mandir}/man1/gtk4-demo-application.1*
+%{_mandir}/man1/gtk4-icon-browser.1*
+%{_mandir}/man1/gtk4-widget-factory.1*
 %{_examplesdir}/%{name}-%{version}
 
 %if %{with cloudprint}
 %files cloudprint
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/printbackends/libprintbackend-cloudprint.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-cloudprint.so
 %endif
 
 %if %{with cups}
 %files cups
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/printbackends/libprintbackend-cups.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-cups.so
 %endif
 
 %if %{with papi}
 %files papi
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/gtk-3.0/%{abivers}/printbackends/libprintbackend-papi.so
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-papi.so
 %endif
