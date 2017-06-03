@@ -7,6 +7,7 @@
 %bcond_without	papi		# PAPI print backend
 %bcond_without	broadway	# Broadway target
 %bcond_with	mir		# Mir target
+%bcond_without	vulkan		# Vulkan graphics support
 %bcond_without	wayland		# Wayland target
 %bcond_without	static_libs	# static library build
 
@@ -39,6 +40,7 @@ BuildRequires:	cups-devel >= 1:1.2
 %endif
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	docbook-style-xsl
+BuildRequires:	fontconfig-devel
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.0
 BuildRequires:	gettext-tools >= 0.19.7
 BuildRequires:	glib2-devel >= 1:2.51.5
@@ -64,8 +66,11 @@ BuildRequires:	pkgconfig
 %{?with_cloudprint:BuildRequires:	rest-devel >= 0.7}
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.592
+# glslc required to rebuild some files from source
+#BuildRequires:	shaderc
 BuildRequires:	sqlite3-devel
 BuildRequires:	tar >= 1:1.22
+%{?with_vulkan:BuildRequires:	vulkan-devel}
 BuildRequires:	xorg-lib-libX11-devel >= 1.5.0
 BuildRequires:	xorg-lib-libXcomposite-devel
 BuildRequires:	xorg-lib-libXcursor-devel
@@ -189,11 +194,28 @@ Requires:	%{name} = %{version}-%{release}
 Requires:	at-spi2-atk-devel >= 2.6.0
 Requires:	atk-devel >= 1:2.16.0
 Requires:	cairo-gobject-devel >= 1.14.0
+Requires:	fontconfig-devel
 Requires:	gdk-pixbuf2-devel >= 2.31.0
 Requires:	glib2-devel >= 1:2.51.5
 Requires:	graphene-devel >= 1.5.1
+Requires:	libepoxy-devel >= 1.0
 Requires:	pango-devel >= 1:1.38.0
 Requires:	shared-mime-info
+Requires:	xorg-lib-libX11-devel >= 1.5.0
+Requires:	xorg-lib-libXcomposite-devel
+Requires:	xorg-lib-libXcursor-devel
+Requires:	xorg-lib-libXdamage-devel
+Requires:	xorg-lib-libXext-devel
+Requires:	xorg-lib-libXfixes-devel
+Requires:	xorg-lib-libXi-devel
+Requires:	xorg-lib-libXinerama-devel
+Requires:	xorg-lib-libXrandr-devel
+%if %{with wayland}
+Requires:	Mesa-libwayland-egl-devel
+Requires:	wayland-devel >= 1.9.91
+Requires:	wayland-protocols >= 1.7
+Requires:	xorg-lib-libxkbcommon-devel >= 0.2.0
+%endif
 
 %description devel
 Header files and development documentation for the GTK+ libraries.
@@ -310,6 +332,7 @@ CPPFLAGS="%{rpmcppflags}%{?with_papi: -I/usr/include/papi}"
 	%{__enable_disable static_libs static} \
 	%{?with_broadway:--enable-broadway-backend} \
 	%{?with_mir:--enable-mir-backend} \
+	%{!?with_vulkan:--disable-vulkan} \
 	%{?with_wayland:--enable-wayland-backend} \
 	--enable-x11-backend \
 	--enable-xinerama \
