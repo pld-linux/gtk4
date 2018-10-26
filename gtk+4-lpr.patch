@@ -1,0 +1,11 @@
+--- gtk+-3.94.0/modules/printbackends/meson.build.orig	2018-06-26 13:48:16.000000000 +0200
++++ gtk+-3.94.0/modules/printbackends/meson.build	2018-10-26 18:12:34.889346463 +0200
+@@ -73,7 +73,7 @@
+ endif
+ 
+ # Automatic fall-back to the lpr backend
+-if not print_backends.contains('cups')
++if enabled_print_backends.contains('lpr') or not print_backends.contains('cups')
+   print_backends += ['lpr']
+ endif
+ 
