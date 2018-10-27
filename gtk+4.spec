@@ -1,4 +1,3 @@
-# TODO: vulkan+glslc[BR: shaderc]
 #
 # Conditional build:
 %bcond_without	apidocs		# gtk-doc build
@@ -67,7 +66,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.592
 # glslc required to rebuild some files from source
-#BuildRequires:	shaderc
+%{?with_vulkan:BuildRequires:	shaderc}
 BuildRequires:	sqlite3-devel
 BuildRequires:	tar >= 1:1.22
 %{?with_vulkan:BuildRequires:	vulkan-devel}
