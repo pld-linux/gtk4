@@ -20,7 +20,7 @@ Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk+4
 Version:	3.94.0
-Release:	1
+Release:	2
 License:	LGPL v2+
 Group:		X11/Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk+/3.94/gtk+-%{version}.tar.xz
@@ -69,7 +69,7 @@ BuildRequires:	rpmbuild(macros) >= 1.592
 %{?with_vulkan:BuildRequires:	shaderc}
 BuildRequires:	sqlite3-devel
 BuildRequires:	tar >= 1:1.22
-%{?with_vulkan:BuildRequires:	vulkan-devel}
+%{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
 BuildRequires:	xorg-lib-libX11-devel >= 1.5.0
 BuildRequires:	xorg-lib-libXcomposite-devel
 BuildRequires:	xorg-lib-libXcursor-devel
