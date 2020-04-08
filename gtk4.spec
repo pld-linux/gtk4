@@ -18,22 +18,24 @@ Summary(fr.UTF-8):	Le toolkit de GIMP
 Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
-Name:		gtk+4
-Version:	3.94.0
-Release:	2
+Name:		gtk4
+Version:	3.98.2
+Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk+/3.94/gtk+-%{version}.tar.xz
-# Source0-md5:	047f05058d3ad6a3bbfcb48d3167099e
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk/3.98/gtk-%{version}.tar.xz
+# Source0-md5:	50b15d06273b00ecb1c6c4b51abac1a5
 Patch0:		%{name}-lpr.patch
-URL:		http://www.gtk.org/
+Patch1:		%{name}-pc.patch
+URL:		https://www.gtk.org/
+%{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
 BuildRequires:	at-spi2-atk-devel >= 2.6.0
 BuildRequires:	atk-devel >= 1:2.16.0
 # cairo-gobject + cairo-pdf,cairo-ps,cairo-svg
 BuildRequires:	cairo-gobject-devel >= 1.14.0
 BuildRequires:	colord-devel >= 0.1.9
 %if %{with cups}
-BuildRequires:	cups-devel >= 1:1.6
+BuildRequires:	cups-devel >= 1:2.0
 %endif
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	docbook-style-xsl
@@ -41,11 +43,12 @@ BuildRequires:	fontconfig-devel
 # libavfilter >= 6.47.100, libavformat >= 57.41.100, libavcodec >= 57.48.101, libavutil >= 55.28.100, libswscale >= 4.6.100
 %{?with_ffmpeg:BuildRequires:	ffmpeg-devel >= 3.1.1}
 BuildRequires:	freetype-devel >= 1:2.7.1
+BuildRequires:	fribidi-devel >= 0.19.7
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.0
 BuildRequires:	gettext-tools >= 0.19.7
-BuildRequires:	glib2-devel >= 1:2.55.0
+BuildRequires:	glib2-devel >= 1:2.59.0
 BuildRequires:	gobject-introspection-devel >= 1.39.0
-BuildRequires:	graphene-devel >= 1.5.1
+BuildRequires:	graphene-devel >= 1.9.1
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
 %if %{with apidocs}
 BuildRequires:	gtk-doc >= 1.25-2
@@ -58,18 +61,18 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	libxml2-progs >= 1:2.6.31
 BuildRequires:	libxslt-progs >= 1.1.20
-BuildRequires:	meson >= 0.43.0
-BuildRequires:	pango-devel >= 1:1.41.0
+BuildRequires:	meson >= 0.50.1
+BuildRequires:	ninja >= 1.5
+BuildRequires:	pango-devel >= 1:1.44.4
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
 %{?with_cloudprint:BuildRequires:	rest-devel >= 0.7}
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.592
+BuildRequires:	rpmbuild(macros) >= 1.736
 # glslc required to rebuild some files from source
 %{?with_vulkan:BuildRequires:	shaderc}
 BuildRequires:	sqlite3-devel
 BuildRequires:	tar >= 1:1.22
-%{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
 BuildRequires:	xorg-lib-libX11-devel >= 1.5.0
 BuildRequires:	xorg-lib-libXcomposite-devel
 BuildRequires:	xorg-lib-libXcursor-devel
@@ -87,20 +90,20 @@ BuildRequires:	xz
 # wayland-client, wayland-cursor, wayland-scanner
 BuildRequires:	wayland-devel >= 1.14.91
 BuildRequires:	wayland-egl-devel
-BuildRequires:	wayland-protocols >= 1.12
+BuildRequires:	wayland-protocols >= 1.14
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	xorg-lib-libX11 >= 1.5.0
-Requires(post,postun):	glib2 >= 1:2.55.0
+Requires(post,postun):	glib2 >= 1:2.59.0
 Requires:	atk >= 1:2.16.0
 Requires:	cairo-gobject >= 1.14.0
 Requires:	freetype >= 1:2.7.1
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.55.0
-Requires:	graphene >= 1.5.1
+Requires:	glib2 >= 1:2.59.0
+Requires:	graphene >= 1.9.1
 %{?with_cloudproviders:Requires:	libcloudproviders >= 0.2.5}
 Requires:	libepoxy >= 1.4
-Requires:	pango >= 1:1.41.0
+Requires:	pango >= 1:1.44.4
 Requires:	xorg-lib-libXi >= 1.3.0
 Requires:	xorg-lib-libXrandr >= 1.5.0
 %if %{with wayland}
@@ -110,9 +113,10 @@ Requires:	xorg-lib-libxkbcommon >= 0.2.0
 # evince is used as gtk-print-preview-command by default
 Suggests:	evince-backend-pdf
 %if %{with cups}
-# cups is used by default if gtk+ is built with cups
+# cups is used by default if gtk is built with cups
 Suggests:	%{name}-cups = %{version}-%{release}
 %endif
+Obsoletes:	gtk+4 < 3.95
 Obsoletes:	gtk+4-papi
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -172,7 +176,8 @@ Summary:	Utility to update icon cache used by GTK+ library
 Summary(pl.UTF-8):	Narzędzie do uaktualniania cache'a ikon używanego przez bibliotekę GTK+
 Group:		Applications/System
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.55.0
+Requires:	glib2 >= 1:2.59.0
+Obsoletes:	gtk+4-update-icon-cache < 3.95
 
 %description update-icon-cache
 Utility to update icon cache used by GTK+ library.
@@ -193,15 +198,16 @@ Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja do GTK+
 Summary(tr.UTF-8):	GIMP araç takımı ve çizim takımı
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+%{?with_vulkan:Requires:	Vulkan-Loader-devel}
 Requires:	at-spi2-atk-devel >= 2.6.0
 Requires:	atk-devel >= 1:2.16.0
 Requires:	cairo-gobject-devel >= 1.14.0
 Requires:	fontconfig-devel
 Requires:	gdk-pixbuf2-devel >= 2.31.0
-Requires:	glib2-devel >= 1:2.55.0
-Requires:	graphene-devel >= 1.5.1
+Requires:	glib2-devel >= 1:2.59.0
+Requires:	graphene-devel >= 1.9.1
 Requires:	libepoxy-devel >= 1.4
-Requires:	pango-devel >= 1:1.41.0
+Requires:	pango-devel >= 1:1.44.4
 Requires:	shared-mime-info
 Requires:	xorg-lib-libX11-devel >= 1.5.0
 Requires:	xorg-lib-libXcomposite-devel
@@ -211,13 +217,15 @@ Requires:	xorg-lib-libXext-devel
 Requires:	xorg-lib-libXfixes-devel
 Requires:	xorg-lib-libXi-devel
 Requires:	xorg-lib-libXinerama-devel
-Requires:	xorg-lib-libXrandr-devel
+Requires:	xorg-lib-libXrandr-devel >= 1.5.0
 %if %{with wayland}
 Requires:	wayland-devel >= 1.14.91
 Requires:	wayland-egl-devel
-Requires:	wayland-protocols >= 1.12
+Requires:	wayland-protocols >= 1.14
 Requires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
+Requires:	zlib-devel
+Obsoletes:	gtk+4-devel < 3.95
 
 %description devel
 Header files and development documentation for the GTK+ libraries.
@@ -230,6 +238,7 @@ Summary:	GTK+ static libraries
 Summary(pl.UTF-8):	Biblioteki statyczne GTK+
 Group:		X11/Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
+Obsoletes:	gtk+4-static < 3.95
 
 %description static
 GTK+ static libraries.
@@ -242,7 +251,8 @@ Summary:	GTK+ API documentation
 Summary(pl.UTF-8):	Dokumentacja API GTK+
 Group:		Documentation
 Requires:	gtk-doc-common
-%if "%{_rpmversion}" >= "5"
+Obsoletes:	gtk+4-apidocs < 3.95
+%if "%{_rpmversion}" >= "4.6"
 BuildArch:	noarch
 %endif
 
@@ -256,8 +266,9 @@ Dokumentacja API GTK+.
 Summary:	GTK+ - example programs
 Summary(pl.UTF-8):	GTK+ - programy przykładowe
 Group:		X11/Development/Libraries
-Requires(post,postun):	glib2 >= 1:2.55.0
+Requires(post,postun):	glib2 >= 1:2.59.0
 Requires:	%{name}-devel = %{version}-%{release}
+Obsoletes:	gtk+4-examples < 3.95
 
 %description examples
 GTK+ - example programs.
@@ -270,6 +281,7 @@ Summary:	Cloudprint printing module for GTK+
 Summary(pl.UTF-8):	Moduł GTK+ do drukowania przez Cloudprint
 Group:		X11/Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	gtk+4-cloudprint < 3.95
 
 %description cloudprint
 Cloudprint printing module for GTK+.
@@ -282,7 +294,8 @@ Summary:	CUPS printing module for GTK+
 Summary(pl.UTF-8):	Moduł GTK+ do drukowania przez CUPS
 Group:		X11/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	cups-lib >= 1.6
+Requires:	cups-lib >= 2.0
+Obsoletes:	gtk+4-cups < 3.95
 
 %description cups
 CUPS printing module for GTK+.
@@ -291,14 +304,17 @@ CUPS printing module for GTK+.
 Moduł GTK+ do drukowania przez CUPS.
 
 %prep
-%setup -q -n gtk+-%{version}
+%setup -q -n gtk-%{version}
 %patch0 -p1
+%patch1 -p1
+
+%{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' demos/gtk-demo/geninclude.py
 
 %build
 %meson build \
-	%{?with_apidocs:-Ddocumentation=true} \
 	%{?with_broadway:-Dbroadway-backend=true} \
 	%{?with_cloudproviders:-Dcloudproviders=true} \
+	%{?with_apidocs:-Dgtk_doc=true} \
 	-Dinstall-tests=false \
 	-Dman-pages=true \
 	-Dmedia-backends=%{!?with_ffmpeg:%{!?with_gstreamer:no}}%{?with_ffmpeg:ffmpeg,}%{?with_gstreamer:gstreamer} \
@@ -307,12 +323,12 @@ Moduł GTK+ do drukowania przez CUPS.
 	%{!?with_wayland:-Dwayland-backend=false} \
 	-Dxinerama=yes
 
-%meson_build -C build
+%ninja_build -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%meson_install -C build
+%ninja_install -C build
 
 install -d $RPM_BUILD_ROOT%{_libdir}/gtk-4.0/%{abivers}/{immodules,inspector}
 
@@ -385,9 +401,9 @@ exit 0
 %doc AUTHORS NEWS README.md
 %{?with_broadway:%attr(755,root,root) %{_bindir}/gtk4-broadwayd}
 %attr(755,root,root) %{_bindir}/gtk4-launch
-%attr(755,root,root) %{_libdir}/libgtk-4.so.0.9400.0
-# library filename is actual soname as of 3.94.x
-#attr(755,root,root) %ghost %{_libdir}/libgtk-4.so.0.9400.0
+%attr(755,root,root) %{_libdir}/libgtk-4.so.0.9802.0
+# library filename is actual soname as of 3.9x
+#attr(755,root,root) %ghost %{_libdir}/libgtk-4.so.0
 
 %dir %{_libdir}/gtk-4.0
 %dir %{_libdir}/gtk-4.0/%{abivers}
@@ -408,10 +424,10 @@ exit 0
 %{_libdir}/girepository-1.0/Gsk-4.0.typelib
 %{_libdir}/girepository-1.0/Gtk-4.0.typelib
 
-%{_datadir}/glib-2.0/schemas/org.gtk.Settings.ColorChooser.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.gtk.Settings.Debug.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.gtk.Settings.EmojiChooser.gschema.xml
-%{_datadir}/glib-2.0/schemas/org.gtk.Settings.FileChooser.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Settings.ColorChooser.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Settings.Debug.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Settings.EmojiChooser.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Settings.FileChooser.gschema.xml
 %{?with_broadway:%{_mandir}/man1/gtk4-broadwayd.1*}
 %{_mandir}/man1/gtk4-launch.1*
 
@@ -428,17 +444,17 @@ exit 0
 %attr(755,root,root) %{_bindir}/gtk4-query-settings
 %attr(755,root,root) %{_libdir}/libgtk-4.so
 %{_includedir}/gtk-4.0
-%{_pkgconfigdir}/gtk+-4.0.pc
-%{_pkgconfigdir}/gtk+-unix-print-4.0.pc
-%{_pkgconfigdir}/gtk+-x11-4.0.pc
+%{_pkgconfigdir}/gtk4.pc
+%{_pkgconfigdir}/gtk4-unix-print.pc
+%{_pkgconfigdir}/gtk4-x11.pc
 %if %{with broadway}
-%{_pkgconfigdir}/gtk+-broadway-4.0.pc
+%{_pkgconfigdir}/gtk4-broadway.pc
 %endif
 %if %{with wayland}
-%{_pkgconfigdir}/gtk+-wayland-4.0.pc
+%{_pkgconfigdir}/gtk4-wayland.pc
 %endif
-%{_datadir}/gettext/its/gtkbuilder.its
-%{_datadir}/gettext/its/gtkbuilder.loc
+%{_datadir}/gettext/its/gtk4builder.its
+%{_datadir}/gettext/its/gtk4builder.loc
 %{_datadir}/gtk-4.0
 %{_datadir}/gir-1.0/Gdk-4.0.gir
 %{_datadir}/gir-1.0/GdkX11-4.0.gir
@@ -446,6 +462,10 @@ exit 0
 %{_datadir}/gir-1.0/Gtk-4.0.gir
 %{_mandir}/man1/gtk4-builder-tool.1*
 %{_mandir}/man1/gtk4-query-settings.1*
+
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/libgtk-4.a
 
 %if %{with apidocs}
 %files apidocs
@@ -461,16 +481,18 @@ exit 0
 %attr(755,root,root) %{_bindir}/gtk4-demo-application
 %attr(755,root,root) %{_bindir}/gtk4-icon-browser
 %attr(755,root,root) %{_bindir}/gtk4-widget-factory
-%{_datadir}/glib-2.0/schemas/org.gtk.Demo.gschema.xml
-%{_datadir}/metainfo/org.gtk.Demo.appdata.xml
-%{_datadir}/metainfo/org.gtk.WidgetFactory.appdata.xml
-%{_desktopdir}/gtk4-demo.desktop
-%{_desktopdir}/gtk4-icon-browser.desktop
-%{_desktopdir}/gtk4-widget-factory.desktop
-%{_iconsdir}/hicolor/*/apps/gtk4-demo-symbolic.symbolic.png
-%{_iconsdir}/hicolor/*/apps/gtk4-demo.png
-%{_iconsdir}/hicolor/*/apps/gtk4-widget-factory-symbolic.symbolic.png
-%{_iconsdir}/hicolor/*/apps/gtk4-widget-factory.png
+%{_datadir}/glib-2.0/schemas/org.gtk.Demo4.gschema.xml
+%{_datadir}/metainfo/org.gtk.Demo4.appdata.xml
+%{_datadir}/metainfo/org.gtk.WidgetFactory4.appdata.xml
+%{_desktopdir}/org.gtk.Demo4.desktop
+%{_desktopdir}/org.gtk.IconBrowser4.desktop
+%{_desktopdir}/org.gtk.WidgetFactory4.desktop
+%{_iconsdir}/hicolor/scalable/apps/org.gtk.Demo4.svg
+%{_iconsdir}/hicolor/scalable/apps/org.gtk.IconBrowser4.svg
+%{_iconsdir}/hicolor/scalable/apps/org.gtk.WidgetFactory4.svg
+%{_iconsdir}/hicolor/symbolic/apps/org.gtk.Demo4-symbolic.svg
+%{_iconsdir}/hicolor/symbolic/apps/org.gtk.IconBrowser4-symbolic.svg
+%{_iconsdir}/hicolor/symbolic/apps/org.gtk.WidgetFactory4-symbolic.svg
 %{_mandir}/man1/gtk4-demo.1*
 %{_mandir}/man1/gtk4-demo-application.1*
 %{_mandir}/man1/gtk4-icon-browser.1*
