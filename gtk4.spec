@@ -1,12 +1,12 @@
 #
 # Conditional build:
-%bcond_without	apidocs		# gtk-doc build
+%bcond_with	apidocs		# gtk-doc build (requires gtk-doc 2)
 %bcond_without	broadway	# Broadway target
 %bcond_without	wayland		# Wayland target
 %bcond_without	vulkan		# Vulkan graphics support
 %bcond_without	gstreamer	# GStreamer media backend
 %bcond_with	ffmpeg		# FFmpeg media backend
-%bcond_with	cloudproviders	# cloudproviders support
+%bcond_with	cloudproviders	# cloudproviders support (broken as of 3.98.3)
 %bcond_without	cloudprint	# cloudprint print backend
 %bcond_without	cups		# CUPS print backend
 
@@ -19,12 +19,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	3.98.2
+Version:	3.98.3
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk/3.98/gtk-%{version}.tar.xz
-# Source0-md5:	50b15d06273b00ecb1c6c4b51abac1a5
+# Source0-md5:	5b449d9eb87a2acbe0f85416615c7081
 Patch0:		%{name}-lpr.patch
 Patch1:		%{name}-pc.patch
 URL:		https://www.gtk.org/
@@ -317,7 +317,7 @@ Moduł GTK+ do drukowania przez CUPS.
 	%{?with_apidocs:-Dgtk_doc=true} \
 	-Dinstall-tests=false \
 	-Dman-pages=true \
-	-Dmedia-backends=%{!?with_ffmpeg:%{!?with_gstreamer:no}}%{?with_ffmpeg:ffmpeg,}%{?with_gstreamer:gstreamer} \
+	-Dmedia=%{!?with_ffmpeg:%{!?with_gstreamer:no}}%{?with_ffmpeg:ffmpeg,}%{?with_gstreamer:gstreamer} \
 	-Dprint-backends=file,lpr%{?with_cups:,cups}%{?with_cloudprint:,cloudprint} \
 	%{!?with_vulkan:-Dvulkan=no} \
 	%{!?with_wayland:-Dwayland-backend=false} \
@@ -401,9 +401,8 @@ exit 0
 %doc AUTHORS NEWS README.md
 %{?with_broadway:%attr(755,root,root) %{_bindir}/gtk4-broadwayd}
 %attr(755,root,root) %{_bindir}/gtk4-launch
-%attr(755,root,root) %{_libdir}/libgtk-4.so.0.9802.0
-# library filename is actual soname as of 3.9x
-#attr(755,root,root) %ghost %{_libdir}/libgtk-4.so.0
+%attr(755,root,root) %{_libdir}/libgtk-4.so.0.9803.0
+%attr(755,root,root) %ghost %{_libdir}/libgtk-4.so.0
 
 %dir %{_libdir}/gtk-4.0
 %dir %{_libdir}/gtk-4.0/%{abivers}
