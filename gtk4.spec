@@ -19,12 +19,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	3.98.3
+Version:	3.98.4
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk/3.98/gtk-%{version}.tar.xz
-# Source0-md5:	5b449d9eb87a2acbe0f85416615c7081
+# Source0-md5:	3c23781d4d2a3ee43c2d5aa066a3deae
 Patch0:		%{name}-lpr.patch
 Patch1:		%{name}-pc.patch
 URL:		https://www.gtk.org/
@@ -401,7 +401,7 @@ exit 0
 %doc AUTHORS NEWS README.md
 %{?with_broadway:%attr(755,root,root) %{_bindir}/gtk4-broadwayd}
 %attr(755,root,root) %{_bindir}/gtk4-launch
-%attr(755,root,root) %{_libdir}/libgtk-4.so.0.9803.0
+%attr(755,root,root) %{_libdir}/libgtk-4.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgtk-4.so.0
 
 %dir %{_libdir}/gtk-4.0
