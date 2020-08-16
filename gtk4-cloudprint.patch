@@ -1,0 +1,20 @@
+--- gtk-3.99.0/modules/printbackends/gtkprintbackendcloudprint.c.orig	2020-07-31 04:16:36.465869700 +0200
++++ gtk-3.99.0/modules/printbackends/gtkprintbackendcloudprint.c	2020-08-16 11:32:00.376303666 +0200
+@@ -71,8 +71,6 @@
+ } typedef TGOAAccount;
+ 
+ static GObjectClass *backend_parent_class;
+-static void                 gtk_print_backend_cloudprint_class_init      (GtkPrintBackendCloudprintClass *class);
+-static void                 gtk_print_backend_cloudprint_init            (GtkPrintBackendCloudprint      *impl);
+ static void                 gtk_print_backend_cloudprint_finalize	 (GObject *object);
+ static void                 cloudprint_printer_get_settings_from_options (GtkPrinter           *printer,
+ 									  GtkPrinterOptionSet  *options,
+@@ -921,7 +919,7 @@
+   /* How many document pages to go onto one side of paper. */
+   option = gtk_printer_option_new ("gtk-n-up", _("Pages per _sheet:"), GTK_PRINTER_OPTION_TYPE_PICKONE);
+   gtk_printer_option_choices_from_array (option, G_N_ELEMENTS (n_up),
+-					 (char **) n_up, (char **) n_up /* FIXME i18n (localised digits)! */);
++					 (const char **) n_up, (const char **) n_up /* FIXME i18n (localised digits)! */);
+   gtk_printer_option_set (option, "1");
+   gtk_printer_option_set_add (set, option);
+   g_object_unref (option);

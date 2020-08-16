@@ -6,7 +6,7 @@
 %bcond_without	vulkan		# Vulkan graphics support
 %bcond_without	gstreamer	# GStreamer media backend
 %bcond_with	ffmpeg		# FFmpeg media backend
-%bcond_with	cloudproviders	# cloudproviders support (broken as of 3.98.3)
+%bcond_without	cloudproviders	# cloudproviders support
 %bcond_without	cloudprint	# cloudprint print backend
 %bcond_without	cups		# CUPS print backend
 
@@ -19,18 +19,17 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	3.98.4
+Version:	3.99.0
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk/3.98/gtk-%{version}.tar.xz
-# Source0-md5:	3c23781d4d2a3ee43c2d5aa066a3deae
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk/3.99/gtk-%{version}.tar.xz
+# Source0-md5:	f6bf0c49db854783b566fd25b9d341e2
 Patch0:		%{name}-lpr.patch
 Patch1:		%{name}-pc.patch
+Patch2:		%{name}-cloudprint.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
-BuildRequires:	at-spi2-atk-devel >= 2.6.0
-BuildRequires:	atk-devel >= 1:2.16.0
 # cairo-gobject + cairo-pdf,cairo-ps,cairo-svg
 BuildRequires:	cairo-gobject-devel >= 1.14.0
 BuildRequires:	colord-devel >= 0.1.9
@@ -46,7 +45,7 @@ BuildRequires:	freetype-devel >= 1:2.7.1
 BuildRequires:	fribidi-devel >= 0.19.7
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.0
 BuildRequires:	gettext-tools >= 0.19.7
-BuildRequires:	glib2-devel >= 1:2.59.0
+BuildRequires:	glib2-devel >= 1:2.63.1
 BuildRequires:	gobject-introspection-devel >= 1.39.0
 BuildRequires:	graphene-devel >= 1.9.1
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
@@ -55,15 +54,15 @@ BuildRequires:	gtk-doc >= 1.25-2
 %endif
 BuildRequires:	harfbuzz-devel >= 0.9
 %{?with_cloudprint:BuildRequires:	json-glib-devel >= 1.0}
-%{?with_cloudproviders:BuildRequires:	libcloudproviders-devel >= 0.2.5}
+%{?with_cloudproviders:BuildRequires:	libcloudproviders-devel >= 0.3.1}
 BuildRequires:	libepoxy-devel >= 1.4
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	libxml2-progs >= 1:2.6.31
 BuildRequires:	libxslt-progs >= 1.1.20
-BuildRequires:	meson >= 0.50.1
+BuildRequires:	meson >= 0.53
 BuildRequires:	ninja >= 1.5
-BuildRequires:	pango-devel >= 1:1.44.4
+BuildRequires:	pango-devel >= 1:1.45.0
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
 %{?with_cloudprint:BuildRequires:	rest-devel >= 0.7}
@@ -90,20 +89,19 @@ BuildRequires:	xz
 # wayland-client, wayland-cursor, wayland-scanner
 BuildRequires:	wayland-devel >= 1.14.91
 BuildRequires:	wayland-egl-devel
-BuildRequires:	wayland-protocols >= 1.14
+BuildRequires:	wayland-protocols >= 1.20
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	xorg-lib-libX11 >= 1.5.0
-Requires(post,postun):	glib2 >= 1:2.59.0
-Requires:	atk >= 1:2.16.0
+Requires(post,postun):	glib2 >= 1:2.63.1
 Requires:	cairo-gobject >= 1.14.0
 Requires:	freetype >= 1:2.7.1
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.59.0
+Requires:	glib2 >= 1:2.63.1
 Requires:	graphene >= 1.9.1
-%{?with_cloudproviders:Requires:	libcloudproviders >= 0.2.5}
+%{?with_cloudproviders:Requires:	libcloudproviders >= 0.3.1}
 Requires:	libepoxy >= 1.4
-Requires:	pango >= 1:1.44.4
+Requires:	pango >= 1:1.45.0
 Requires:	xorg-lib-libXi >= 1.3.0
 Requires:	xorg-lib-libXrandr >= 1.5.0
 %if %{with wayland}
@@ -176,7 +174,7 @@ Summary:	Utility to update icon cache used by GTK+ library
 Summary(pl.UTF-8):	Narzędzie do uaktualniania cache'a ikon używanego przez bibliotekę GTK+
 Group:		Applications/System
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.59.0
+Requires:	glib2 >= 1:2.63.1
 Obsoletes:	gtk+4-update-icon-cache < 3.95
 
 %description update-icon-cache
@@ -199,15 +197,13 @@ Summary(tr.UTF-8):	GIMP araç takımı ve çizim takımı
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 %{?with_vulkan:Requires:	Vulkan-Loader-devel}
-Requires:	at-spi2-atk-devel >= 2.6.0
-Requires:	atk-devel >= 1:2.16.0
 Requires:	cairo-gobject-devel >= 1.14.0
 Requires:	fontconfig-devel
 Requires:	gdk-pixbuf2-devel >= 2.31.0
-Requires:	glib2-devel >= 1:2.59.0
+Requires:	glib2-devel >= 1:2.63.1
 Requires:	graphene-devel >= 1.9.1
 Requires:	libepoxy-devel >= 1.4
-Requires:	pango-devel >= 1:1.44.4
+Requires:	pango-devel >= 1:1.45.0
 Requires:	shared-mime-info
 Requires:	xorg-lib-libX11-devel >= 1.5.0
 Requires:	xorg-lib-libXcomposite-devel
@@ -221,7 +217,7 @@ Requires:	xorg-lib-libXrandr-devel >= 1.5.0
 %if %{with wayland}
 Requires:	wayland-devel >= 1.14.91
 Requires:	wayland-egl-devel
-Requires:	wayland-protocols >= 1.14
+Requires:	wayland-protocols >= 1.20
 Requires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	zlib-devel
@@ -266,7 +262,7 @@ Dokumentacja API GTK+.
 Summary:	GTK+ - example programs
 Summary(pl.UTF-8):	GTK+ - programy przykładowe
 Group:		X11/Development/Libraries
-Requires(post,postun):	glib2 >= 1:2.59.0
+Requires(post,postun):	glib2 >= 1:2.63.1
 Requires:	%{name}-devel = %{version}-%{release}
 Obsoletes:	gtk+4-examples < 3.95
 
@@ -307,6 +303,7 @@ Moduł GTK+ do drukowania przez CUPS.
 %setup -q -n gtk-%{version}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' demos/gtk-demo/geninclude.py
 
@@ -479,19 +476,29 @@ exit 0
 %attr(755,root,root) %{_bindir}/gtk4-demo
 %attr(755,root,root) %{_bindir}/gtk4-demo-application
 %attr(755,root,root) %{_bindir}/gtk4-icon-browser
+%attr(755,root,root) %{_bindir}/gtk4-print-editor
 %attr(755,root,root) %{_bindir}/gtk4-widget-factory
 %{_datadir}/glib-2.0/schemas/org.gtk.Demo4.gschema.xml
 %{_datadir}/metainfo/org.gtk.Demo4.appdata.xml
+%{_datadir}/metainfo/org.gtk.IconBrowser4.appdata.xml
+%{_datadir}/metainfo/org.gtk.PrintEditor4.appdata.xml
 %{_datadir}/metainfo/org.gtk.WidgetFactory4.appdata.xml
 %{_desktopdir}/org.gtk.Demo4.desktop
 %{_desktopdir}/org.gtk.IconBrowser4.desktop
+%{_desktopdir}/org.gtk.PrintEditor4.desktop
 %{_desktopdir}/org.gtk.WidgetFactory4.desktop
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.Demo4.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.IconBrowser4.svg
+%{_iconsdir}/hicolor/scalable/apps/org.gtk.PrintEditor4.svg
+%{_iconsdir}/hicolor/scalable/apps/org.gtk.PrintEditor4.Devel.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.WidgetFactory4.svg
+%{_iconsdir}/hicolor/scalable/apps/org.gtk.gtk4.NodeEditor.svg
+%{_iconsdir}/hicolor/scalable/apps/org.gtk.gtk4.NodeEditor.Devel.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.Demo4-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.IconBrowser4-symbolic.svg
+%{_iconsdir}/hicolor/symbolic/apps/org.gtk.PrintEditor4-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.WidgetFactory4-symbolic.svg
+%{_iconsdir}/hicolor/symbolic/apps/org.gtk.gtk4.NodeEditor-symbolic.svg
 %{_mandir}/man1/gtk4-demo.1*
 %{_mandir}/man1/gtk4-demo-application.1*
 %{_mandir}/man1/gtk4-icon-browser.1*
