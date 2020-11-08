@@ -1,11 +1,27 @@
---- gtk+-3.94.0/modules/printbackends/meson.build.orig	2018-06-26 13:48:16.000000000 +0200
-+++ gtk+-3.94.0/modules/printbackends/meson.build	2018-10-26 18:12:34.889346463 +0200
-@@ -73,7 +73,7 @@
- endif
+--- gtk-3.99.4/modules/printbackends/meson.build.orig	2020-11-05 18:50:08.077664720 +0100
++++ gtk-3.99.4/modules/printbackends/meson.build	2020-11-05 19:01:33.980615531 +0100
+@@ -37,7 +37,9 @@
+                 dependencies: [libgtk_dep, cups_dep, colord_dep],
+                 install_dir: printbackends_install_dir,
+                 install : true)
+-else
++endif
++
++if get_option('print-lpr') or not print_backends.contains('cups')
+   # Automatic fall-back to the lpr backend
+   print_backends += 'lpr'
+   shared_module('printbackend-lpr',
+--- gtk-3.99.4/meson_options.txt.orig	2020-11-05 03:46:55.071335300 +0100
++++ gtk-3.99.4/meson_options.txt	2020-11-08 19:19:18.240643030 +0100
+@@ -39,6 +39,11 @@
  
- # Automatic fall-back to the lpr backend
--if not print_backends.contains('cups')
-+if enabled_print_backends.contains('lpr') or not print_backends.contains('cups')
-   print_backends += ['lpr']
- endif
+ # Print backends
  
++option('print-lpr',
++       type: 'boolean',
++       value: false,
++       description: 'Build the lpr print backend')
++
+ option('print-cups',
+        type: 'feature',
+        value: 'auto',

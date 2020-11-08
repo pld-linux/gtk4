@@ -1,15 +1,17 @@
 # TODO: tracker=enabled (BR: tracker3)
 #
 # Conditional build:
-%bcond_with	apidocs		# gtk-doc build (requires gtk-doc 2)
+%bcond_with	apidocs		# gtk-doc build (fails as of 3.99.4)
 %bcond_without	broadway	# Broadway target
 %bcond_without	wayland		# Wayland target
 %bcond_without	vulkan		# Vulkan graphics support
+%bcond_without	ffmpeg		# FFmpeg media backend
 %bcond_without	gstreamer	# GStreamer media backend
-%bcond_with	ffmpeg		# FFmpeg media backend
-%bcond_without	cloudproviders	# cloudproviders support
 %bcond_without	cloudprint	# cloudprint print backend
 %bcond_without	cups		# CUPS print backend
+%bcond_without	cloudproviders	# cloudproviders support
+%bcond_with	sysprof		# sysprof tracing support
+%bcond_with	tracker		# Tracker3 filechooser search
 
 Summary:	The GIMP Toolkit
 Summary(cs.UTF-8):	Sada nástrojů pro GIMP
@@ -20,12 +22,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	3.99.1
+Version:	3.99.4
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk/3.99/gtk-%{version}.tar.xz
-# Source0-md5:	c99623a48b6635dc55a8b18dd09075d7
+Source0:	https://download.gnome.org/sources/gtk/3.99/gtk-%{version}.tar.xz
+# Source0-md5:	5b07a69b90a8a55084a1efe23c074b42
 Patch0:		%{name}-lpr.patch
 Patch1:		%{name}-pc.patch
 URL:		https://www.gtk.org/
@@ -50,7 +52,7 @@ BuildRequires:	gobject-introspection-devel >= 1.39.0
 BuildRequires:	graphene-devel >= 1.9.1
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
 %if %{with apidocs}
-BuildRequires:	gtk-doc >= 1.25-2
+BuildRequires:	gtk-doc >= 1.33
 %endif
 BuildRequires:	harfbuzz-devel >= 0.9
 %{?with_cloudprint:BuildRequires:	json-glib-devel >= 1.0}
@@ -60,18 +62,20 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	libxml2-progs >= 1:2.6.31
 BuildRequires:	libxslt-progs >= 1.1.20
-BuildRequires:	meson >= 0.53
+BuildRequires:	meson >= 0.54
 BuildRequires:	ninja >= 1.5
-BuildRequires:	pango-devel >= 1:1.45.5
+BuildRequires:	pango-devel >= 1:1.47.0
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
 %{?with_cloudprint:BuildRequires:	rest-devel >= 0.7}
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.736
+BuildRequires:	rpmbuild(macros) >= 1.752
 # glslc required to rebuild some files from source
 %{?with_vulkan:BuildRequires:	shaderc}
 BuildRequires:	sqlite3-devel
+%{?with_sysprof:BuildRequires:	sysprof-devel >= 3.38.0}
 BuildRequires:	tar >= 1:1.22
+%{?with_tracker:BuildRequires:	tracker3-devel >= 3.0}
 BuildRequires:	xorg-lib-libX11-devel >= 1.5.0
 BuildRequires:	xorg-lib-libXcomposite-devel
 BuildRequires:	xorg-lib-libXcursor-devel
@@ -101,7 +105,7 @@ Requires:	glib2 >= 1:2.65.0
 Requires:	graphene >= 1.9.1
 %{?with_cloudproviders:Requires:	libcloudproviders >= 0.3.1}
 Requires:	libepoxy >= 1.4
-Requires:	pango >= 1:1.45.5
+Requires:	pango >= 1:1.47.0
 Requires:	xorg-lib-libXi >= 1.3.0
 Requires:	xorg-lib-libXrandr >= 1.5.0
 %if %{with wayland}
@@ -128,10 +132,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %endif
 
 %description
-GTK+, which stands for the GIMP ToolKit, is a library for creating
+GTK, which stands for the GIMP ToolKit, is a library for creating
 graphical user interfaces for the X Window System. It is designed to
-be small, efficient, and flexible. GTK+ is written in C with a very
-object-oriented approach. GDK (part of GTK+) is a drawing toolkit
+be small, efficient, and flexible. GTK is written in C with a very
+object-oriented approach. GDK (part of GTK) is a drawing toolkit
 which provides a thin layer over Xlib to help automate things like
 dealing with different color depths, and GTK is a widget set for
 creating user interfaces.
@@ -156,13 +160,13 @@ käytetään nyt myös useissa muissakin ohjelmissa.
 Libreria X scritta per GIMP. Viene usata da diversi programmi.
 
 %description -l pl.UTF-8
-GTK+, która to biblioteka stała się podstawą programu GIMP, zawiera
+GTK, która to biblioteka stała się podstawą programu GIMP, zawiera
 funkcje do tworzenia graficznego interfejsu użytkownika pod X Window.
-Była tworzona z założeniem żeby była mała, efektywna i wygodna. GTK+
+Była tworzona z założeniem żeby była mała, efektywna i wygodna. GTK
 jest napisane w C z podejściem zorientowanym bardzo obiektowo. GDK
-(część GTK+) jest warstwą pośrednią pomiędzy Xlib a właściwym GTK
+(część GTK) jest warstwą pośrednią pomiędzy Xlib a właściwym GTK
 zapewniającą pracę niezależnie od głębi koloru (ilości bitów na
-piksel). GTK (druga część GTK+) jest natomiast już zbiorem różnego
+piksel). GTK (druga część GTK) jest natomiast już zbiorem różnego
 rodzaju kontrolek służących do tworzenia interfejsu użytkownika.
 
 %description -l tr.UTF-8
@@ -170,29 +174,29 @@ Başlangıçta GIMP için yazılmış X kitaplıkları. Şu anda başka
 programlarca da kullanılmaktadır.
 
 %package update-icon-cache
-Summary:	Utility to update icon cache used by GTK+ library
-Summary(pl.UTF-8):	Narzędzie do uaktualniania cache'a ikon używanego przez bibliotekę GTK+
+Summary:	Utility to update icon cache used by GTK library
+Summary(pl.UTF-8):	Narzędzie do uaktualniania cache'a ikon używanego przez bibliotekę GTK
 Group:		Applications/System
 Requires:	gdk-pixbuf2 >= 2.31.0
 Requires:	glib2 >= 1:2.65.0
 Obsoletes:	gtk+4-update-icon-cache < 3.95
 
 %description update-icon-cache
-Utility to update icon cache used by GTK+ library.
+Utility to update icon cache used by GTK library.
 
 %description update-icon-cache -l pl.UTF-8
 Narzędzie do uaktualniania cache'a ikon używanego przez bibliotekę
-GTK+.
+GTK.
 
 %package devel
-Summary:	GTK+ header files and development documentation
+Summary:	GTK header files and development documentation
 Summary(cs.UTF-8):	Sada nástrojů GIMP a kreslící kit GIMP
 Summary(da.UTF-8):	GIMP Toolkit og GIMP Tegnings-værktøj
 Summary(de.UTF-8):	GIMP Toolkit und GIMP Drawing Kit
 Summary(fi.UTF-8):	Gimp-työkalukokoelma ja Gimp-piirtotyökalut
 Summary(fr.UTF-8):	Toolkit de GIMP (GTK) et Kit de dessin de GIMP (GDK)
 Summary(it.UTF-8):	GIMP Toolkit and GIMP Drawing Kit
-Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja do GTK+
+Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja do GTK
 Summary(tr.UTF-8):	GIMP araç takımı ve çizim takımı
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
@@ -203,7 +207,7 @@ Requires:	gdk-pixbuf2-devel >= 2.31.0
 Requires:	glib2-devel >= 1:2.65.0
 Requires:	graphene-devel >= 1.9.1
 Requires:	libepoxy-devel >= 1.4
-Requires:	pango-devel >= 1:1.45.5
+Requires:	pango-devel >= 1:1.47.0
 Requires:	shared-mime-info
 Requires:	xorg-lib-libX11-devel >= 1.5.0
 Requires:	xorg-lib-libXcomposite-devel
@@ -224,80 +228,104 @@ Requires:	zlib-devel
 Obsoletes:	gtk+4-devel < 3.95
 
 %description devel
-Header files and development documentation for the GTK+ libraries.
+Header files and development documentation for the GTK libraries.
 
 %description devel -l pl.UTF-8
-Pliki nagłówkowe i dokumentacja do bibliotek GTK+.
+Pliki nagłówkowe i dokumentacja do bibliotek GTK.
 
 %package static
-Summary:	GTK+ static libraries
-Summary(pl.UTF-8):	Biblioteki statyczne GTK+
+Summary:	GTK static libraries
+Summary(pl.UTF-8):	Biblioteki statyczne GTK
 Group:		X11/Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 Obsoletes:	gtk+4-static < 3.95
 
 %description static
-GTK+ static libraries.
+GTK static libraries.
 
 %description static -l pl.UTF-8
-Biblioteki statyczne GTK+
+Biblioteki statyczne GTK
 
 %package apidocs
-Summary:	GTK+ API documentation
-Summary(pl.UTF-8):	Dokumentacja API GTK+
+Summary:	GTK API documentation
+Summary(pl.UTF-8):	Dokumentacja API GTK
 Group:		Documentation
 Requires:	gtk-doc-common
 Obsoletes:	gtk+4-apidocs < 3.95
-%if "%{_rpmversion}" >= "4.6"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description apidocs
-GTK+ API documentation.
+GTK API documentation.
 
 %description apidocs -l pl.UTF-8
-Dokumentacja API GTK+.
+Dokumentacja API GTK.
 
 %package examples
-Summary:	GTK+ - example programs
-Summary(pl.UTF-8):	GTK+ - programy przykładowe
+Summary:	GTK - example programs
+Summary(pl.UTF-8):	GTK - programy przykładowe
 Group:		X11/Development/Libraries
 Requires(post,postun):	glib2 >= 1:2.65.0
 Requires:	%{name}-devel = %{version}-%{release}
 Obsoletes:	gtk+4-examples < 3.95
 
 %description examples
-GTK+ - example programs.
+GTK - example programs.
 
 %description examples -l pl.UTF-8
-GTK+ - przykładowe programy.
+GTK - przykładowe programy.
 
 %package cloudprint
-Summary:	Cloudprint printing module for GTK+
-Summary(pl.UTF-8):	Moduł GTK+ do drukowania przez Cloudprint
+Summary:	Cloudprint printing module for GTK
+Summary(pl.UTF-8):	Moduł GTK do drukowania przez Cloudprint
 Group:		X11/Libraries
 Requires:	%{name} = %{version}-%{release}
 Obsoletes:	gtk+4-cloudprint < 3.95
 
 %description cloudprint
-Cloudprint printing module for GTK+.
+Cloudprint printing module for GTK.
 
 %description cloudprint -l pl.UTF-8
-Moduł GTK+ do drukowania przez Cloudprint.
+Moduł GTK do drukowania przez Cloudprint.
+
+%package media-ffmpeg
+Summary:	FFmpeg media backend for GTK
+Summary(pl.UTF-8):	Backend multimedialny FFmpeg dla GTK
+Group:		X11/Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	ffmpeg-libs >= 3.1.1
+
+%description media-ffmpeg
+FFmpeg media backend for GTK.
+
+%description media-ffmpeg -l pl.UTF-8
+Backend multimedialny FFmpeg dla GTK.
+
+%package media-gstreamer
+Summary:	GStreamer media backend for GTK
+Summary(pl.UTF-8):	Backend multimedialny GStreamer dla GTK
+Group:		X11/Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	gstreamer >= 1.12.3
+
+%description media-gstreamer
+GStreamer media backend for GTK.
+
+%description media-gstreamer -l pl.UTF-8
+Backend multimedialny GStreamer dla GTK.
 
 %package cups
-Summary:	CUPS printing module for GTK+
-Summary(pl.UTF-8):	Moduł GTK+ do drukowania przez CUPS
+Summary:	CUPS printing module for GTK
+Summary(pl.UTF-8):	Moduł GTK do drukowania przez CUPS
 Group:		X11/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	cups-lib >= 2.0
 Obsoletes:	gtk+4-cups < 3.95
 
 %description cups
-CUPS printing module for GTK+.
+CUPS printing module for GTK.
 
 %description cups -l pl.UTF-8
-Moduł GTK+ do drukowania przez CUPS.
+Moduł GTK do drukowania przez CUPS.
 
 %prep
 %setup -q -n gtk-%{version}
@@ -314,9 +342,14 @@ Moduł GTK+ do drukowania przez CUPS.
 	%{?with_apidocs:-Dgtk_doc=true} \
 	-Dinstall-tests=false \
 	-Dman-pages=true \
-	-Dmedia=%{!?with_ffmpeg:%{!?with_gstreamer:no}}%{?with_ffmpeg:ffmpeg,}%{?with_gstreamer:gstreamer} \
-	-Dprint=file,lpr%{?with_cups:,cups}%{?with_cloudprint:,cloudprint} \
-	%{!?with_vulkan:-Dvulkan=no} \
+	%{!?with_ffmpeg:-Dmedia-ffmpeg=disabled} \
+	%{!?with_gstreamer:-Dmedia-gstreamer=disabled} \
+	%{!?with_cloudprint:-Dprint-cloudprint=disabled} \
+	%{!?with_cups:-Dprint-cups=disabled} \
+	-Dprint-lpr=true \
+	%{?with_sysprof:-Dsysprof=enabled} \
+	%{?with_tracker:-Dtracker=enabled} \
+	%{!?with_vulkan:-Dvulkan=disabled} \
 	%{!?with_wayland:-Dwayland-backend=false}
 
 %ninja_build -C build
@@ -405,16 +438,13 @@ exit 0
 %dir %{_libdir}/gtk-4.0/%{abivers}/immodules
 %dir %{_libdir}/gtk-4.0/%{abivers}/inspector
 %dir %{_libdir}/gtk-4.0/%{abivers}/media
-%if %{with ffmpeg}
-%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/media/libmedia-ffmpeg.so
-%endif
-%if %{with gstreamer}
-%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/media/libmedia-gstreamer.so
-%endif
 %dir %{_libdir}/gtk-4.0/%{abivers}/printbackends
 %attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-file.so
 %attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-lpr.so
 %{_libdir}/girepository-1.0/Gdk-4.0.typelib
+%if %{with wayland}
+%{_libdir}/girepository-1.0/GdkWayland-4.0.typelib
+%endif
 %{_libdir}/girepository-1.0/GdkX11-4.0.typelib
 %{_libdir}/girepository-1.0/Gsk-4.0.typelib
 %{_libdir}/girepository-1.0/Gtk-4.0.typelib
@@ -452,6 +482,9 @@ exit 0
 %{_datadir}/gettext/its/gtk4builder.loc
 %{_datadir}/gtk-4.0
 %{_datadir}/gir-1.0/Gdk-4.0.gir
+%if %{with wayland}
+%{_datadir}/gir-1.0/GdkWayland-4.0.gir
+%endif
 %{_datadir}/gir-1.0/GdkX11-4.0.gir
 %{_datadir}/gir-1.0/Gsk-4.0.gir
 %{_datadir}/gir-1.0/Gtk-4.0.gir
@@ -500,6 +533,18 @@ exit 0
 %{_mandir}/man1/gtk4-icon-browser.1*
 %{_mandir}/man1/gtk4-widget-factory.1*
 %{_examplesdir}/%{name}-%{version}
+
+%if %{with ffmpeg}
+%files media-ffmpeg
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/media/libmedia-ffmpeg.so
+%endif
+
+%if %{with gstreamer}
+%files media-gstreamer
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/media/libmedia-gstreamer.so
+%endif
 
 %if %{with cloudprint}
 %files cloudprint
