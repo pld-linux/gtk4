@@ -1,4 +1,3 @@
-# TODO: tracker=enabled (BR: tracker3)
 #
 # Conditional build:
 %bcond_with	apidocs		# gtk-doc build (fails as of 3.99.4)
@@ -22,12 +21,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	3.99.4
+Version:	3.99.5
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
 Source0:	https://download.gnome.org/sources/gtk/3.99/gtk-%{version}.tar.xz
-# Source0-md5:	5b07a69b90a8a55084a1efe23c074b42
+# Source0-md5:	36f63aef9b8446695113b055cce76f78
 Patch0:		%{name}-lpr.patch
 Patch1:		%{name}-pc.patch
 URL:		https://www.gtk.org/
