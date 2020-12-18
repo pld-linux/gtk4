@@ -21,12 +21,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	3.99.5
+Version:	4.0.0
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	https://download.gnome.org/sources/gtk/3.99/gtk-%{version}.tar.xz
-# Source0-md5:	36f63aef9b8446695113b055cce76f78
+Source0:	https://download.gnome.org/sources/gtk/4.0/gtk-%{version}.tar.xz
+# Source0-md5:	73cf2e810f2c34bd3fd379c4c5e138c3
 Patch0:		%{name}-lpr.patch
 Patch1:		%{name}-pc.patch
 URL:		https://www.gtk.org/
@@ -63,6 +63,7 @@ BuildRequires:	libxml2-progs >= 1:2.6.31
 BuildRequires:	libxslt-progs >= 1.1.20
 BuildRequires:	meson >= 0.54
 BuildRequires:	ninja >= 1.5
+%{?with_apidocs:BuildRequires:	pandoc >= 1.18}
 BuildRequires:	pango-devel >= 1:1.47.0
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
@@ -430,7 +431,7 @@ exit 0
 %{?with_broadway:%attr(755,root,root) %{_bindir}/gtk4-broadwayd}
 %attr(755,root,root) %{_bindir}/gtk4-launch
 %attr(755,root,root) %{_libdir}/libgtk-4.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgtk-4.so.0
+%attr(755,root,root) %ghost %{_libdir}/libgtk-4.so.1
 
 %dir %{_libdir}/gtk-4.0
 %dir %{_libdir}/gtk-4.0/%{abivers}

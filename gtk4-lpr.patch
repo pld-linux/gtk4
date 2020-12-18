@@ -1,9 +1,9 @@
---- gtk-3.99.4/modules/printbackends/meson.build.orig	2020-11-05 18:50:08.077664720 +0100
-+++ gtk-3.99.4/modules/printbackends/meson.build	2020-11-05 19:01:33.980615531 +0100
-@@ -37,7 +37,9 @@
-                 dependencies: [libgtk_dep, cups_dep, colord_dep],
-                 install_dir: printbackends_install_dir,
-                 install : true)
+--- gtk-4.0.0/modules/printbackends/meson.build.orig	2020-12-18 16:22:39.358636846 +0100
++++ gtk-4.0.0/modules/printbackends/meson.build	2020-12-18 16:26:30.037387152 +0100
+@@ -40,7 +40,9 @@
+     install_dir: printbackends_install_dir,
+     install: true,
+   )
 -else
 +endif
 +
