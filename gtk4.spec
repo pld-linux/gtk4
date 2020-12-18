@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_with	apidocs		# gtk-doc build (fails as of 3.99.4)
+%bcond_without	apidocs		# gtk-doc build
 %bcond_without	broadway	# Broadway target
 %bcond_without	wayland		# Wayland target
 %bcond_without	vulkan		# Vulkan graphics support
@@ -353,6 +353,11 @@ Moduł GTK do drukowania przez CUPS.
 	%{!?with_wayland:-Dwayland-backend=false}
 
 %ninja_build -C build
+
+%if %{with apidocs}
+# seems missing in default target (as of 4.0.0)
+%ninja_build -C build gtk4-doc
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
