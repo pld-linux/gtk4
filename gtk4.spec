@@ -21,14 +21,13 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.0.0
+Version:	4.0.1
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
 Source0:	https://download.gnome.org/sources/gtk/4.0/gtk-%{version}.tar.xz
-# Source0-md5:	73cf2e810f2c34bd3fd379c4c5e138c3
+# Source0-md5:	8a95b68b654d16c233c7fd7a037b0ddc
 Patch0:		%{name}-lpr.patch
-Patch1:		%{name}-pc.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
 # cairo-gobject + cairo-pdf,cairo-ps,cairo-svg
@@ -330,7 +329,6 @@ Moduł GTK do drukowania przez CUPS.
 %prep
 %setup -q -n gtk-%{version}
 %patch0 -p1
-%patch1 -p1
 
 %{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' demos/gtk-demo/geninclude.py
 
