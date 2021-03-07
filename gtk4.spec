@@ -251,7 +251,7 @@ Summary(pl.UTF-8):	Dokumentacja API GTK
 Group:		Documentation
 Requires:	gtk-doc-common
 Obsoletes:	gtk+4-apidocs < 3.95
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description apidocs
 GTK API documentation.
