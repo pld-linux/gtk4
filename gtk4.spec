@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_without	apidocs		# gtk-doc build
+%bcond_without	apidocs		# gi-docgen based API documentation
 %bcond_without	broadway	# Broadway target
 %bcond_without	wayland		# Wayland target
 %bcond_without	vulkan		# Vulkan graphics support
@@ -9,6 +9,7 @@
 %bcond_without	cloudprint	# cloudprint print backend
 %bcond_without	cups		# CUPS print backend
 %bcond_without	cloudproviders	# cloudproviders support
+%bcond_without	static_libs	# static library
 %bcond_with	sysprof		# sysprof tracing support
 %bcond_with	tracker		# Tracker3 filechooser search
 
@@ -21,12 +22,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.0.3
+Version:	4.2.0
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	https://download.gnome.org/sources/gtk/4.0/gtk-%{version}.tar.xz
-# Source0-md5:	070422559bdc656077c413c05a054624
+Source0:	https://download.gnome.org/sources/gtk/4.2/gtk-%{version}.tar.xz
+# Source0-md5:	656c54a43b252ef1955d0787bab1a7aa
 Patch0:		%{name}-lpr.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
@@ -45,14 +46,13 @@ BuildRequires:	freetype-devel >= 1:2.7.1
 BuildRequires:	fribidi-devel >= 0.19.7
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.0
 BuildRequires:	gettext-tools >= 0.19.7
-BuildRequires:	glib2-devel >= 1:2.65.0
+%{?with_apidocs:BuildRequires:	gi-docgen >= 2021.1}
+BuildRequires:	glib2-devel >= 1:2.66.0
 BuildRequires:	gobject-introspection-devel >= 1.39.0
 BuildRequires:	graphene-devel >= 1.9.1
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
-%if %{with apidocs}
-BuildRequires:	gtk-doc >= 1.33
-%endif
 BuildRequires:	harfbuzz-devel >= 0.9
+BuildRequires:	iso-codes
 %{?with_cloudprint:BuildRequires:	json-glib-devel >= 1.0}
 %{?with_cloudproviders:BuildRequires:	libcloudproviders-devel >= 0.3.1}
 BuildRequires:	libepoxy-devel >= 1.4
@@ -62,12 +62,12 @@ BuildRequires:	libxml2-progs >= 1:2.6.31
 BuildRequires:	libxslt-progs >= 1.1.20
 BuildRequires:	meson >= 0.54
 BuildRequires:	ninja >= 1.5
-%{?with_apidocs:BuildRequires:	pandoc >= 1.18}
 BuildRequires:	pango-devel >= 1:1.47.0
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
 %{?with_cloudprint:BuildRequires:	rest-devel >= 0.7}
 BuildRequires:	rpm-pythonprov
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.752
 # glslc required to rebuild some files from source
 %{?with_vulkan:BuildRequires:	shaderc}
@@ -96,12 +96,13 @@ BuildRequires:	wayland-protocols >= 1.20
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	xorg-lib-libX11 >= 1.5.0
-Requires(post,postun):	glib2 >= 1:2.65.0
+Requires(post,postun):	glib2 >= 1:2.66.0
 Requires:	cairo-gobject >= 1.14.0
 Requires:	freetype >= 1:2.7.1
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.65.0
+Requires:	glib2 >= 1:2.66.0
 Requires:	graphene >= 1.9.1
+Requires:	iso-codes
 %{?with_cloudproviders:Requires:	libcloudproviders >= 0.3.1}
 Requires:	libepoxy >= 1.4
 Requires:	pango >= 1:1.47.0
@@ -118,7 +119,7 @@ Suggests:	evince-backend-pdf
 Suggests:	%{name}-cups = %{version}-%{release}
 %endif
 Obsoletes:	gtk+4 < 3.95
-Obsoletes:	gtk+4-papi
+Obsoletes:	gtk+4-papi < 3.94
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		abivers	4.0.0
@@ -177,7 +178,7 @@ Summary:	Utility to update icon cache used by GTK library
 Summary(pl.UTF-8):	Narzędzie do uaktualniania cache'a ikon używanego przez bibliotekę GTK
 Group:		Applications/System
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.65.0
+Requires:	glib2 >= 1:2.66.0
 Obsoletes:	gtk+4-update-icon-cache < 3.95
 
 %description update-icon-cache
@@ -332,6 +333,10 @@ Moduł GTK do drukowania przez CUPS.
 
 %{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' demos/gtk-demo/geninclude.py
 
+%if %{with static_libs}
+%{__sed} -i -e '/^libgtk = / s/shared_library/library/' gtk/meson.build
+%endif
+
 %build
 %meson build \
 	%{?with_broadway:-Dbroadway-backend=true} \
@@ -352,11 +357,6 @@ Moduł GTK do drukowania przez CUPS.
 
 %ninja_build -C build
 
-%if %{with apidocs}
-# seems missing in default target (as of 4.0.0)
-%ninja_build -C build gtk4-doc
-%endif
-
 %install
 rm -rf $RPM_BUILD_ROOT
 
@@ -366,6 +366,10 @@ install -d $RPM_BUILD_ROOT%{_libdir}/gtk-4.0/%{abivers}/{immodules,inspector}
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 cp -a demos examples $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+
+# FIXME: common location for gi-docgen generated docs
+install -d $RPM_BUILD_ROOT%{_gtkdocdir}
+%{__mv} $RPM_BUILD_ROOT%{_docdir}/gtk4/reference/* $RPM_BUILD_ROOT%{_gtkdocdir}
 
 %{__mv} $RPM_BUILD_ROOT%{_localedir}/{sr@ije,sr@ijekavian}
 # unsupported by glibc
@@ -494,14 +498,18 @@ exit 0
 %{_mandir}/man1/gtk4-builder-tool.1*
 %{_mandir}/man1/gtk4-query-settings.1*
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libgtk-4.a
+%endif
 
 %if %{with apidocs}
 %files apidocs
 %defattr(644,root,root,755)
 %{_gtkdocdir}/gdk4
+%{_gtkdocdir}/gdk4-wayland
+%{_gtkdocdir}/gdk4-x11
 %{_gtkdocdir}/gsk4
 %{_gtkdocdir}/gtk4
 %endif
