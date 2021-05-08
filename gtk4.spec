@@ -22,12 +22,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.2.0
+Version:	4.2.1
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
 Source0:	https://download.gnome.org/sources/gtk/4.2/gtk-%{version}.tar.xz
-# Source0-md5:	656c54a43b252ef1955d0787bab1a7aa
+# Source0-md5:	7854bd017e0016db76d17be9d4deb02e
 Patch0:		%{name}-lpr.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
@@ -337,6 +337,9 @@ Moduł GTK do drukowania przez CUPS.
 %{__sed} -i -e '/^libgtk = / s/shared_library/library/' gtk/meson.build
 %endif
 
+# FIXME: common location for gi-docgen generated docs
+%{__sed} -i -e "/^docs_dir =/ s,gtk_datadir / 'doc','%{_gtkdocdir}'," docs/reference/meson.build
+
 %build
 %meson build \
 	%{?with_broadway:-Dbroadway-backend=true} \
@@ -366,10 +369,6 @@ install -d $RPM_BUILD_ROOT%{_libdir}/gtk-4.0/%{abivers}/{immodules,inspector}
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 cp -a demos examples $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
-
-# FIXME: common location for gi-docgen generated docs
-install -d $RPM_BUILD_ROOT%{_gtkdocdir}
-%{__mv} $RPM_BUILD_ROOT%{_docdir}/gtk4/reference/* $RPM_BUILD_ROOT%{_gtkdocdir}
 
 %{__mv} $RPM_BUILD_ROOT%{_localedir}/{sr@ije,sr@ijekavian}
 # unsupported by glibc
