@@ -6,7 +6,6 @@
 %bcond_without	vulkan		# Vulkan graphics support
 %bcond_without	ffmpeg		# FFmpeg media backend
 %bcond_without	gstreamer	# GStreamer media backend
-%bcond_without	cloudprint	# cloudprint print backend
 %bcond_without	cups		# CUPS print backend
 %bcond_without	cloudproviders	# cloudproviders support
 %bcond_without	static_libs	# static library
@@ -22,12 +21,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.2.1
+Version:	4.4.0
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	https://download.gnome.org/sources/gtk/4.2/gtk-%{version}.tar.xz
-# Source0-md5:	7854bd017e0016db76d17be9d4deb02e
+Source0:	https://download.gnome.org/sources/gtk/4.4/gtk-%{version}.tar.xz
+# Source0-md5:	113d24bd311037f774bf1aa7d5d0a344
 Patch0:		%{name}-lpr.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
@@ -53,7 +52,6 @@ BuildRequires:	graphene-devel >= 1.9.1
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
 BuildRequires:	harfbuzz-devel >= 0.9
 BuildRequires:	iso-codes
-%{?with_cloudprint:BuildRequires:	json-glib-devel >= 1.0}
 %{?with_cloudproviders:BuildRequires:	libcloudproviders-devel >= 0.3.1}
 BuildRequires:	libepoxy-devel >= 1.4
 BuildRequires:	libstdc++-devel
@@ -65,9 +63,8 @@ BuildRequires:	ninja >= 1.5
 BuildRequires:	pango-devel >= 1:1.47.0
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
-%{?with_cloudprint:BuildRequires:	rest-devel >= 0.7}
-BuildRequires:	rpm-pythonprov
 BuildRequires:	rpm-build >= 4.6
+BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.752
 # glslc required to rebuild some files from source
 %{?with_vulkan:BuildRequires:	shaderc}
@@ -90,9 +87,9 @@ BuildRequires:	xz
 %{?with_broadway:BuildRequires:	zlib-devel}
 %if %{with wayland}
 # wayland-client, wayland-cursor, wayland-scanner
-BuildRequires:	wayland-devel >= 1.14.91
+BuildRequires:	wayland-devel >= 1.16.91
 BuildRequires:	wayland-egl-devel
-BuildRequires:	wayland-protocols >= 1.20
+BuildRequires:	wayland-protocols >= 1.21
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	xorg-lib-libX11 >= 1.5.0
@@ -109,7 +106,7 @@ Requires:	pango >= 1:1.47.0
 Requires:	xorg-lib-libXi >= 1.3.0
 Requires:	xorg-lib-libXrandr >= 1.5.0
 %if %{with wayland}
-Requires:	wayland >= 1.14.91
+Requires:	wayland >= 1.16.91
 Requires:	xorg-lib-libxkbcommon >= 0.2.0
 %endif
 # evince is used as gtk-print-preview-command by default
@@ -120,6 +117,8 @@ Suggests:	%{name}-cups = %{version}-%{release}
 %endif
 Obsoletes:	gtk+4 < 3.95
 Obsoletes:	gtk+4-papi < 3.94
+Obsoletes:	gtk+4-cloudprint < 3.95
+Obsoletes:	gtk4-cloudprint < 4.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		abivers	4.0.0
@@ -219,9 +218,9 @@ Requires:	xorg-lib-libXi-devel
 Requires:	xorg-lib-libXinerama-devel
 Requires:	xorg-lib-libXrandr-devel >= 1.5.0
 %if %{with wayland}
-Requires:	wayland-devel >= 1.14.91
+Requires:	wayland-devel >= 1.16.91
 Requires:	wayland-egl-devel
-Requires:	wayland-protocols >= 1.20
+Requires:	wayland-protocols >= 1.21
 Requires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	zlib-devel
@@ -274,19 +273,6 @@ GTK - example programs.
 %description examples -l pl.UTF-8
 GTK - przykładowe programy.
 
-%package cloudprint
-Summary:	Cloudprint printing module for GTK
-Summary(pl.UTF-8):	Moduł GTK do drukowania przez Cloudprint
-Group:		X11/Libraries
-Requires:	%{name} = %{version}-%{release}
-Obsoletes:	gtk+4-cloudprint < 3.95
-
-%description cloudprint
-Cloudprint printing module for GTK.
-
-%description cloudprint -l pl.UTF-8
-Moduł GTK do drukowania przez Cloudprint.
-
 %package media-ffmpeg
 Summary:	FFmpeg media backend for GTK
 Summary(pl.UTF-8):	Backend multimedialny FFmpeg dla GTK
@@ -332,6 +318,8 @@ Moduł GTK do drukowania przez CUPS.
 %patch0 -p1
 
 %{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' demos/gtk-demo/geninclude.py
+%{__sed} -i -e '1s,/usr/bin/env .* gjs,/usr/bin/gjs,' examples/labels.js
+%{__sed} -i -e '1s,/usr/bin/env .* python3,%{__python3},' examples/squares.py
 
 %if %{with static_libs}
 %{__sed} -i -e '/^libgtk = / s/shared_library/library/' gtk/meson.build
@@ -348,9 +336,8 @@ Moduł GTK do drukowania przez CUPS.
 	%{?with_apidocs:-Dgtk_doc=true} \
 	-Dinstall-tests=false \
 	-Dman-pages=true \
-	%{!?with_ffmpeg:-Dmedia-ffmpeg=disabled} \
+	%{?with_ffmpeg:-Dmedia-ffmpeg=enabled} \
 	%{!?with_gstreamer:-Dmedia-gstreamer=disabled} \
-	%{!?with_cloudprint:-Dprint-cloudprint=disabled} \
 	%{!?with_cups:-Dprint-cups=disabled} \
 	-Dprint-lpr=true \
 	%{?with_sysprof:-Dsysprof=enabled} \
@@ -408,17 +395,6 @@ exit 0
 %glib_compile_schemas
 %update_desktop_database
 %update_icon_cache hicolor
-
-%post cloudprint
-umask 022
-gio-querymodules %{_libdir}/gtk-4.0/%{abivers}/printbackends
-
-%postun cloudprint
-if [ "$1" != "0" ]; then
-	umask 022
-	gio-querymodules %{_libdir}/gtk-4.0/%{abivers}/printbackends
-fi
-exit 0
 
 %post cups
 umask 022
@@ -554,12 +530,6 @@ exit 0
 %files media-gstreamer
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/media/libmedia-gstreamer.so
-%endif
-
-%if %{with cloudprint}
-%files cloudprint
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-cloudprint.so
 %endif
 
 %if %{with cups}
