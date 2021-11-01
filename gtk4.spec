@@ -21,12 +21,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.4.0
-Release:	2
+Version:	4.4.1
+Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
 Source0:	https://download.gnome.org/sources/gtk/4.4/gtk-%{version}.tar.xz
-# Source0-md5:	113d24bd311037f774bf1aa7d5d0a344
+# Source0-md5:	f3661ba9a9e6805172c776c9c0a3b73c
 Patch0:		%{name}-lpr.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
