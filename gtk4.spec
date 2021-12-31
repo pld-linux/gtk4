@@ -50,6 +50,8 @@ BuildRequires:	glib2-devel >= 1:2.66.0
 BuildRequires:	gobject-introspection-devel >= 1.39.0
 BuildRequires:	graphene-devel >= 1.9.1
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
+# pkgconfig(gstreamer-player-1.0)
+%{?with_gstreamer:BuildRequires:	gstreamer-plugins-bad-devel >= 1.12.3}
 BuildRequires:	harfbuzz-devel >= 0.9
 BuildRequires:	iso-codes
 %{?with_cloudproviders:BuildRequires:	libcloudproviders-devel >= 0.3.1}
