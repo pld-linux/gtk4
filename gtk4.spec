@@ -21,12 +21,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.4.1
+Version:	4.6.0
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	https://download.gnome.org/sources/gtk/4.4/gtk-%{version}.tar.xz
-# Source0-md5:	f3661ba9a9e6805172c776c9c0a3b73c
+Source0:	https://download.gnome.org/sources/gtk/4.6/gtk-%{version}.tar.xz
+# Source0-md5:	41c25ca304052f1a592f698f83922e23
 Patch0:		%{name}-lpr.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
@@ -58,9 +58,9 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	libxml2-progs >= 1:2.6.31
 BuildRequires:	libxslt-progs >= 1.1.20
-BuildRequires:	meson >= 0.54
+BuildRequires:	meson >= 0.59
 BuildRequires:	ninja >= 1.5
-BuildRequires:	pango-devel >= 1:1.47.0
+BuildRequires:	pango-devel >= 1:1.50.0
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
@@ -79,7 +79,7 @@ BuildRequires:	xorg-lib-libXdamage-devel
 BuildRequires:	xorg-lib-libXext-devel
 BuildRequires:	xorg-lib-libXfixes-devel
 BuildRequires:	xorg-lib-libXft-devel
-BuildRequires:	xorg-lib-libXi-devel
+BuildRequires:	xorg-lib-libXi-devel >= 1.8
 BuildRequires:	xorg-lib-libXinerama-devel
 BuildRequires:	xorg-lib-libXrandr-devel >= 1.5.0
 BuildRequires:	xorg-lib-libXrender-devel
@@ -102,8 +102,8 @@ Requires:	graphene >= 1.9.1
 Requires:	iso-codes
 %{?with_cloudproviders:Requires:	libcloudproviders >= 0.3.1}
 Requires:	libepoxy >= 1.4
-Requires:	pango >= 1:1.47.0
-Requires:	xorg-lib-libXi >= 1.3.0
+Requires:	pango >= 1:1.50.0
+Requires:	xorg-lib-libXi >= 1.8
 Requires:	xorg-lib-libXrandr >= 1.5.0
 %if %{with wayland}
 Requires:	wayland >= 1.16.91
@@ -206,7 +206,7 @@ Requires:	gdk-pixbuf2-devel >= 2.31.0
 Requires:	glib2-devel >= 1:2.65.0
 Requires:	graphene-devel >= 1.9.1
 Requires:	libepoxy-devel >= 1.4
-Requires:	pango-devel >= 1:1.47.0
+Requires:	pango-devel >= 1:1.50.0
 Requires:	shared-mime-info
 Requires:	xorg-lib-libX11-devel >= 1.5.0
 Requires:	xorg-lib-libXcomposite-devel
@@ -214,7 +214,7 @@ Requires:	xorg-lib-libXcursor-devel
 Requires:	xorg-lib-libXdamage-devel
 Requires:	xorg-lib-libXext-devel
 Requires:	xorg-lib-libXfixes-devel
-Requires:	xorg-lib-libXi-devel
+Requires:	xorg-lib-libXi-devel >= 1.8
 Requires:	xorg-lib-libXinerama-devel
 Requires:	xorg-lib-libXrandr-devel >= 1.5.0
 %if %{with wayland}
