@@ -21,12 +21,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.6.0
+Version:	4.6.1
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
 Source0:	https://download.gnome.org/sources/gtk/4.6/gtk-%{version}.tar.xz
-# Source0-md5:	41c25ca304052f1a592f698f83922e23
+# Source0-md5:	8b492a5429652e82f32eacb90762ca20
 Patch0:		%{name}-lpr.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
@@ -52,11 +52,14 @@ BuildRequires:	graphene-devel >= 1.9.1
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
 # pkgconfig(gstreamer-player-1.0)
 %{?with_gstreamer:BuildRequires:	gstreamer-plugins-bad-devel >= 1.12.3}
-BuildRequires:	harfbuzz-devel >= 0.9
+BuildRequires:	harfbuzz-devel >= 2.1.0
 BuildRequires:	iso-codes
 %{?with_cloudproviders:BuildRequires:	libcloudproviders-devel >= 0.3.1}
 BuildRequires:	libepoxy-devel >= 1.4
+BuildRequires:	libjpeg-turbo-devel
+BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
+BuildRequires:	libtiff-devel >= 4
 BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	libxml2-progs >= 1:2.6.31
 BuildRequires:	libxslt-progs >= 1.1.20
@@ -89,9 +92,9 @@ BuildRequires:	xz
 %{?with_broadway:BuildRequires:	zlib-devel}
 %if %{with wayland}
 # wayland-client, wayland-cursor, wayland-scanner
-BuildRequires:	wayland-devel >= 1.16.91
+BuildRequires:	wayland-devel >= 1.20.0
 BuildRequires:	wayland-egl-devel
-BuildRequires:	wayland-protocols >= 1.21
+BuildRequires:	wayland-protocols >= 1.23
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	xorg-lib-libX11 >= 1.5.0
@@ -101,6 +104,7 @@ Requires:	freetype >= 1:2.7.1
 Requires:	gdk-pixbuf2 >= 2.31.0
 Requires:	glib2 >= 1:2.66.0
 Requires:	graphene >= 1.9.1
+Requires:	harfbuzz >= 2.1.0
 Requires:	iso-codes
 %{?with_cloudproviders:Requires:	libcloudproviders >= 0.3.1}
 Requires:	libepoxy >= 1.4
@@ -108,7 +112,7 @@ Requires:	pango >= 1:1.50.0
 Requires:	xorg-lib-libXi >= 1.8
 Requires:	xorg-lib-libXrandr >= 1.5.0
 %if %{with wayland}
-Requires:	wayland >= 1.16.91
+Requires:	wayland >= 1.20.0
 Requires:	xorg-lib-libxkbcommon >= 0.2.0
 %endif
 # evince is used as gtk-print-preview-command by default
@@ -220,9 +224,9 @@ Requires:	xorg-lib-libXi-devel >= 1.8
 Requires:	xorg-lib-libXinerama-devel
 Requires:	xorg-lib-libXrandr-devel >= 1.5.0
 %if %{with wayland}
-Requires:	wayland-devel >= 1.16.91
+Requires:	wayland-devel >= 1.20.0
 Requires:	wayland-egl-devel
-Requires:	wayland-protocols >= 1.21
+Requires:	wayland-protocols >= 1.23
 Requires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	zlib-devel
