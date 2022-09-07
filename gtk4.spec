@@ -21,12 +21,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.6.7
+Version:	4.8.0
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	https://download.gnome.org/sources/gtk/4.6/gtk-%{version}.tar.xz
-# Source0-md5:	92820480ef5fd4b5743f3b2eaf642f9f
+Source0:	https://download.gnome.org/sources/gtk/4.8/gtk-%{version}.tar.xz
+# Source0-md5:	7f06c82f522f1b704c8c3de56b11a032
 Patch0:		%{name}-lpr.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
@@ -52,7 +52,7 @@ BuildRequires:	graphene-devel >= 1.9.1
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
 # pkgconfig(gstreamer-player-1.0)
 %{?with_gstreamer:BuildRequires:	gstreamer-plugins-bad-devel >= 1.12.3}
-BuildRequires:	harfbuzz-devel >= 2.1.0
+BuildRequires:	harfbuzz-devel >= 2.6.0
 BuildRequires:	iso-codes
 %{?with_cloudproviders:BuildRequires:	libcloudproviders-devel >= 0.3.1}
 BuildRequires:	libepoxy-devel >= 1.4
@@ -92,9 +92,9 @@ BuildRequires:	xz
 %{?with_broadway:BuildRequires:	zlib-devel}
 %if %{with wayland}
 # wayland-client, wayland-cursor, wayland-scanner
-BuildRequires:	wayland-devel >= 1.20.0
+BuildRequires:	wayland-devel >= 1.21.0
 BuildRequires:	wayland-egl-devel
-BuildRequires:	wayland-protocols >= 1.23
+BuildRequires:	wayland-protocols >= 1.25
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	xorg-lib-libX11 >= 1.5.0
@@ -104,7 +104,7 @@ Requires:	freetype >= 1:2.7.1
 Requires:	gdk-pixbuf2 >= 2.31.0
 Requires:	glib2 >= 1:2.66.0
 Requires:	graphene >= 1.9.1
-Requires:	harfbuzz >= 2.1.0
+Requires:	harfbuzz >= 2.6.0
 Requires:	iso-codes
 %{?with_cloudproviders:Requires:	libcloudproviders >= 0.3.1}
 Requires:	libepoxy >= 1.4
@@ -112,7 +112,7 @@ Requires:	pango >= 1:1.50.0
 Requires:	xorg-lib-libXi >= 1.8
 Requires:	xorg-lib-libXrandr >= 1.5.0
 %if %{with wayland}
-Requires:	wayland >= 1.20.0
+Requires:	wayland >= 1.21.0
 Requires:	xorg-lib-libxkbcommon >= 0.2.0
 %endif
 # evince is used as gtk-print-preview-command by default
@@ -224,9 +224,9 @@ Requires:	xorg-lib-libXi-devel >= 1.8
 Requires:	xorg-lib-libXinerama-devel
 Requires:	xorg-lib-libXrandr-devel >= 1.5.0
 %if %{with wayland}
-Requires:	wayland-devel >= 1.20.0
+Requires:	wayland-devel >= 1.21.0
 Requires:	wayland-egl-devel
-Requires:	wayland-protocols >= 1.23
+Requires:	wayland-protocols >= 1.25
 Requires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	zlib-devel
@@ -500,6 +500,7 @@ exit 0
 %attr(755,root,root) %{_bindir}/gtk4-demo
 %attr(755,root,root) %{_bindir}/gtk4-demo-application
 %attr(755,root,root) %{_bindir}/gtk4-icon-browser
+%attr(755,root,root) %{_bindir}/gtk4-node-editor
 %attr(755,root,root) %{_bindir}/gtk4-print-editor
 %attr(755,root,root) %{_bindir}/gtk4-widget-factory
 %{_datadir}/glib-2.0/schemas/org.gtk.Demo4.gschema.xml
@@ -507,22 +508,28 @@ exit 0
 %{_datadir}/metainfo/org.gtk.IconBrowser4.appdata.xml
 %{_datadir}/metainfo/org.gtk.PrintEditor4.appdata.xml
 %{_datadir}/metainfo/org.gtk.WidgetFactory4.appdata.xml
+%{_datadir}/metainfo/org.gtk.gtk4.NodeEditor.appdata.xml
 %{_desktopdir}/org.gtk.Demo4.desktop
 %{_desktopdir}/org.gtk.IconBrowser4.desktop
 %{_desktopdir}/org.gtk.PrintEditor4.desktop
 %{_desktopdir}/org.gtk.WidgetFactory4.desktop
+%{_desktopdir}/org.gtk.gtk4.NodeEditor.desktop
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.Demo4.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.IconBrowser4.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.PrintEditor4.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.PrintEditor4.Devel.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.WidgetFactory4.svg
+%{_iconsdir}/hicolor/scalable/apps/org.gtk.gtk4.NodeEditor.svg
+%{_iconsdir}/hicolor/scalable/apps/org.gtk.gtk4.NodeEditor.Devel.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.Demo4-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.IconBrowser4-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.PrintEditor4-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.WidgetFactory4-symbolic.svg
+%{_iconsdir}/hicolor/symbolic/apps/org.gtk.gtk4.NodeEditor-symbolic.svg
 %{_mandir}/man1/gtk4-demo.1*
 %{_mandir}/man1/gtk4-demo-application.1*
 %{_mandir}/man1/gtk4-icon-browser.1*
+%{_mandir}/man1/gtk4-node-editor.1*
 %{_mandir}/man1/gtk4-widget-factory.1*
 %{_examplesdir}/%{name}-%{version}
 
