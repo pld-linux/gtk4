@@ -21,12 +21,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.8.2
+Version:	4.8.3
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
 Source0:	https://download.gnome.org/sources/gtk/4.8/gtk-%{version}.tar.xz
-# Source0-md5:	de29b8eefe5f691e42569971b2a474f9
+# Source0-md5:	d735b9c2a534f034553e2e27bc5af994
 Patch0:		%{name}-lpr.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
@@ -63,7 +63,7 @@ BuildRequires:	libtiff-devel >= 4
 BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	libxml2-progs >= 1:2.6.31
 BuildRequires:	libxslt-progs >= 1.1.20
-BuildRequires:	meson >= 0.59
+BuildRequires:	meson >= 0.60
 BuildRequires:	ninja >= 1.5
 BuildRequires:	pango-devel >= 1:1.50.0
 BuildRequires:	perl-base
