@@ -365,7 +365,7 @@ cp -a demos examples $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %{__mv} $RPM_BUILD_ROOT%{_localedir}/{sr@ije,sr@ijekavian}
 # unsupported by glibc
-%{__rm} -r $RPM_BUILD_ROOT%{_localedir}/io
+%{__rm} -r $RPM_BUILD_ROOT%{_localedir}/{ie,io}
 
 # gtk40 and gtk40-properties domains
 %find_lang %{name} --all-name
