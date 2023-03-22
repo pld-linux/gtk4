@@ -6,6 +6,7 @@
 %bcond_without	vulkan		# Vulkan graphics support
 %bcond_without	ffmpeg		# FFmpeg media backend
 %bcond_without	gstreamer	# GStreamer media backend
+%bcond_with	cpdb		# CPDB print backend
 %bcond_without	cups		# CUPS print backend
 %bcond_without	cloudproviders	# cloudproviders support
 %bcond_without	static_libs	# static library
@@ -21,18 +22,21 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.8.3
-Release:	2
+Version:	4.10.1
+Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	https://download.gnome.org/sources/gtk/4.8/gtk-%{version}.tar.xz
-# Source0-md5:	d735b9c2a534f034553e2e27bc5af994
-Patch0:		%{name}-lpr.patch
+Source0:	https://download.gnome.org/sources/gtk/4.10/gtk-%{version}.tar.xz
+# Source0-md5:	f81e3a4f41da8d88065d545433b22f5a
+Patch0:		%{name}-print-backends.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
 # cairo-gobject + cairo-pdf,cairo-ps,cairo-svg
 BuildRequires:	cairo-gobject-devel >= 1.14.0
 BuildRequires:	colord-devel >= 0.1.9
+%if %{with cpdb}
+BuildRequires:	cpdb-libs-devel >= 2.0
+%endif
 %if %{with cups}
 BuildRequires:	cups-devel >= 1:2.0
 %endif
@@ -42,13 +46,13 @@ BuildRequires:	fontconfig-devel
 # libavfilter >= 6.47.100, libavformat >= 57.41.100, libavcodec >= 57.48.101, libavutil >= 55.28.100, libswscale >= 4.6.100
 %{?with_ffmpeg:BuildRequires:	ffmpeg-devel >= 3.1.1}
 BuildRequires:	freetype-devel >= 1:2.7.1
-BuildRequires:	fribidi-devel >= 0.19.7
+BuildRequires:	fribidi-devel >= 1.0.6
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.0
 BuildRequires:	gettext-tools >= 0.19.7
 %{?with_apidocs:BuildRequires:	gi-docgen >= 2021.1}
-BuildRequires:	glib2-devel >= 1:2.66.0
-BuildRequires:	gobject-introspection-devel >= 1.39.0
-BuildRequires:	graphene-devel >= 1.9.1
+BuildRequires:	glib2-devel >= 1:2.72.0
+BuildRequires:	gobject-introspection-devel >= 1.72.0
+BuildRequires:	graphene-devel >= 1.10.0
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
 # pkgconfig(gstreamer-player-1.0)
 %{?with_gstreamer:BuildRequires:	gstreamer-plugins-bad-devel >= 1.12.3}
@@ -98,12 +102,13 @@ BuildRequires:	wayland-protocols >= 1.25
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	xorg-lib-libX11 >= 1.5.0
-Requires(post,postun):	glib2 >= 1:2.66.0
+Requires(post,postun):	glib2 >= 1:2.72.0
 Requires:	cairo-gobject >= 1.14.0
 Requires:	freetype >= 1:2.7.1
+Requires:	fribidi >= 1.0.6
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.66.0
-Requires:	graphene >= 1.9.1
+Requires:	glib2 >= 1:2.72.0
+Requires:	graphene >= 1.10.0
 Requires:	harfbuzz >= 2.6.0
 Requires:	iso-codes
 %{?with_cloudproviders:Requires:	libcloudproviders >= 0.3.1}
@@ -182,8 +187,9 @@ programlarca da kullanılmaktadır.
 Summary:	Utility to update icon cache used by GTK library
 Summary(pl.UTF-8):	Narzędzie do uaktualniania cache'a ikon używanego przez bibliotekę GTK
 Group:		Applications/System
+Requires:	fribidi >= 1.0.6
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.66.0
+Requires:	glib2 >= 1:2.72.0
 Obsoletes:	gtk+4-update-icon-cache < 3.95
 
 %description update-icon-cache
@@ -208,9 +214,10 @@ Requires:	%{name} = %{version}-%{release}
 %{?with_vulkan:Requires:	Vulkan-Loader-devel}
 Requires:	cairo-gobject-devel >= 1.14.0
 Requires:	fontconfig-devel
+Requires:	fribidi-devel >= 1.0.6
 Requires:	gdk-pixbuf2-devel >= 2.31.0
-Requires:	glib2-devel >= 1:2.65.0
-Requires:	graphene-devel >= 1.9.1
+Requires:	glib2-devel >= 1:2.72.0
+Requires:	graphene-devel >= 1.10.0
 Requires:	libepoxy-devel >= 1.4
 Requires:	pango-devel >= 1:1.50.0
 Requires:	shared-mime-info
@@ -269,7 +276,7 @@ Dokumentacja API GTK.
 Summary:	GTK - example programs
 Summary(pl.UTF-8):	GTK - programy przykładowe
 Group:		X11/Development/Libraries
-Requires(post,postun):	glib2 >= 1:2.65.0
+Requires(post,postun):	glib2 >= 1:2.72.0
 Requires:	%{name}-devel = %{version}-%{release}
 Obsoletes:	gtk+4-examples < 3.95
 
@@ -304,6 +311,19 @@ GStreamer media backend for GTK.
 
 %description media-gstreamer -l pl.UTF-8
 Backend multimedialny GStreamer dla GTK.
+
+%package print-cpdb
+Summary:	CPDB printing module for GTK
+Summary(pl.UTF-8):	Moduł GTK do drukowania przez CPDB
+Group:		X11/Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	cpdb-libs >= 2.0
+
+%description print-cpdb
+CPDB printing module for GTK.
+
+%description print-cpdb -l pl.UTF-8
+Moduł GTK do drukowania przez CPDB.
 
 %package cups
 Summary:	CUPS printing module for GTK
@@ -340,12 +360,11 @@ Moduł GTK do drukowania przez CUPS.
 	%{?with_cloudproviders:-Dcloudproviders=enabled} \
 	-Dcolord=enabled \
 	%{?with_apidocs:-Dgtk_doc=true} \
-	-Dinstall-tests=false \
 	-Dman-pages=true \
 	%{?with_ffmpeg:-Dmedia-ffmpeg=enabled} \
 	%{!?with_gstreamer:-Dmedia-gstreamer=disabled} \
+	%{?with_cpdb:-Dprint-cpdb=enabled} \
 	%{!?with_cups:-Dprint-cups=disabled} \
-	-Dprint-lpr=true \
 	%{?with_sysprof:-Dsysprof=enabled} \
 	%{?with_tracker:-Dtracker=enabled} \
 	%{!?with_vulkan:-Dvulkan=disabled} \
@@ -428,7 +447,6 @@ exit 0
 %dir %{_libdir}/gtk-4.0/%{abivers}/media
 %dir %{_libdir}/gtk-4.0/%{abivers}/printbackends
 %attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-file.so
-%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-lpr.so
 %{_libdir}/girepository-1.0/Gdk-4.0.typelib
 %if %{with wayland}
 %{_libdir}/girepository-1.0/GdkWayland-4.0.typelib
@@ -543,6 +561,12 @@ exit 0
 %files media-gstreamer
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/media/libmedia-gstreamer.so
+%endif
+
+%if %{with cpdb}
+%files print-cpdb
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-cpdb.so
 %endif
 
 %if %{with cups}
