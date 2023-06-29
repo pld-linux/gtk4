@@ -42,6 +42,7 @@ BuildRequires:	cups-devel >= 1:2.0
 %endif
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	docbook-style-xsl
+BuildRequires:	docutils
 BuildRequires:	fontconfig-devel
 # libavfilter >= 6.47.100, libavformat >= 57.41.100, libavcodec >= 57.48.101, libavutil >= 55.28.100, libswscale >= 4.6.100
 %{?with_ffmpeg:BuildRequires:	ffmpeg-devel >= 3.1.1}
