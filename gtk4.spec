@@ -356,11 +356,12 @@ Moduł GTK do drukowania przez CUPS.
 %{__sed} -i -e "/^docs_dir =/ s,gtk_datadir / 'doc','%{_gtkdocdir}'," docs/reference/meson.build
 
 %build
-%meson build \
+%meson --reconfigure build \
 	%{?with_broadway:-Dbroadway-backend=true} \
 	%{?with_cloudproviders:-Dcloudproviders=enabled} \
 	-Dcolord=enabled \
 	%{?with_apidocs:-Dgtk_doc=true} \
+	-Dintrospection=enabled \
 	-Dman-pages=true \
 	%{?with_ffmpeg:-Dmedia-ffmpeg=enabled} \
 	%{!?with_gstreamer:-Dmedia-gstreamer=disabled} \
