@@ -22,12 +22,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.10.5
+Version:	4.12.1
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	https://download.gnome.org/sources/gtk/4.10/gtk-%{version}.tar.xz
-# Source0-md5:	755adad78222b7416adb5d59f0af0bb4
+Source0:	https://download.gnome.org/sources/gtk/4.12/gtk-%{version}.tar.xz
+# Source0-md5:	703c847265c00309ba2836afac717385
 Patch0:		%{name}-print-backends.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
@@ -51,8 +51,8 @@ BuildRequires:	fribidi-devel >= 1.0.6
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.0
 BuildRequires:	gettext-tools >= 0.19.7
 %{?with_apidocs:BuildRequires:	gi-docgen >= 2021.1}
-BuildRequires:	glib2-devel >= 1:2.72.0
-BuildRequires:	gobject-introspection-devel >= 1.72.0
+BuildRequires:	glib2-devel >= 1:2.76.0
+BuildRequires:	gobject-introspection-devel >= 1.76.0
 BuildRequires:	graphene-devel >= 1.10.0
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
 # pkgconfig(gstreamer-player-1.0)
@@ -68,7 +68,7 @@ BuildRequires:	libtiff-devel >= 4
 BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	libxml2-progs >= 1:2.6.31
 BuildRequires:	libxslt-progs >= 1.1.20
-BuildRequires:	meson >= 0.60
+BuildRequires:	meson >= 0.63
 BuildRequires:	ninja >= 1.5
 BuildRequires:	pango-devel >= 1:1.50.0
 BuildRequires:	perl-base
@@ -99,16 +99,16 @@ BuildRequires:	xz
 # wayland-client, wayland-cursor, wayland-scanner
 BuildRequires:	wayland-devel >= 1.21.0
 BuildRequires:	wayland-egl-devel
-BuildRequires:	wayland-protocols >= 1.25
+BuildRequires:	wayland-protocols >= 1.31
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	xorg-lib-libX11 >= 1.5.0
-Requires(post,postun):	glib2 >= 1:2.72.0
+Requires(post,postun):	glib2 >= 1:2.76.0
 Requires:	cairo-gobject >= 1.14.0
 Requires:	freetype >= 1:2.7.1
 Requires:	fribidi >= 1.0.6
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.72.0
+Requires:	glib2 >= 1:2.76.0
 Requires:	graphene >= 1.10.0
 Requires:	harfbuzz >= 2.6.0
 Requires:	iso-codes
@@ -190,7 +190,7 @@ Summary(pl.UTF-8):	Narzędzie do uaktualniania cache'a ikon używanego przez bib
 Group:		Applications/System
 Requires:	fribidi >= 1.0.6
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.72.0
+Requires:	glib2 >= 1:2.76.0
 Obsoletes:	gtk+4-update-icon-cache < 3.95
 
 %description update-icon-cache
@@ -217,7 +217,7 @@ Requires:	cairo-gobject-devel >= 1.14.0
 Requires:	fontconfig-devel
 Requires:	fribidi-devel >= 1.0.6
 Requires:	gdk-pixbuf2-devel >= 2.31.0
-Requires:	glib2-devel >= 1:2.72.0
+Requires:	glib2-devel >= 1:2.76.0
 Requires:	graphene-devel >= 1.10.0
 Requires:	libepoxy-devel >= 1.4
 Requires:	pango-devel >= 1:1.50.0
@@ -277,7 +277,7 @@ Dokumentacja API GTK.
 Summary:	GTK - example programs
 Summary(pl.UTF-8):	GTK - programy przykładowe
 Group:		X11/Development/Libraries
-Requires(post,postun):	glib2 >= 1:2.72.0
+Requires(post,postun):	glib2 >= 1:2.76.0
 Requires:	%{name}-devel = %{version}-%{release}
 Obsoletes:	gtk+4-examples < 3.95
 
@@ -522,6 +522,7 @@ exit 0
 %attr(755,root,root) %{_bindir}/gtk4-icon-browser
 %attr(755,root,root) %{_bindir}/gtk4-node-editor
 %attr(755,root,root) %{_bindir}/gtk4-print-editor
+%attr(755,root,root) %{_bindir}/gtk4-rendernode-tool
 %attr(755,root,root) %{_bindir}/gtk4-widget-factory
 %{_datadir}/glib-2.0/schemas/org.gtk.Demo4.gschema.xml
 %{_datadir}/metainfo/org.gtk.Demo4.appdata.xml
@@ -550,6 +551,7 @@ exit 0
 %{_mandir}/man1/gtk4-demo-application.1*
 %{_mandir}/man1/gtk4-icon-browser.1*
 %{_mandir}/man1/gtk4-node-editor.1*
+%{_mandir}/man1/gtk4-rendernode-tool.1*
 %{_mandir}/man1/gtk4-widget-factory.1*
 %{_examplesdir}/%{name}-%{version}
 
