@@ -51,7 +51,7 @@ BuildRequires:	fribidi-devel >= 1.0.6
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.0
 BuildRequires:	gettext-tools >= 0.19.7
 %{?with_apidocs:BuildRequires:	gi-docgen >= 2021.1}
-BuildRequires:	glib2-devel >= 1:2.76.0
+BuildRequires:	glib2-devel >= 1:2.78.0
 BuildRequires:	gobject-introspection-devel >= 1.76.0
 BuildRequires:	graphene-devel >= 1.10.0
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
@@ -103,12 +103,12 @@ BuildRequires:	wayland-protocols >= 1.31
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	xorg-lib-libX11 >= 1.5.0
-Requires(post,postun):	glib2 >= 1:2.76.0
+Requires(post,postun):	glib2 >= 1:2.78.0
 Requires:	cairo-gobject >= 1.14.0
 Requires:	freetype >= 1:2.7.1
 Requires:	fribidi >= 1.0.6
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.76.0
+Requires:	glib2 >= 1:2.78.0
 Requires:	graphene >= 1.10.0
 Requires:	harfbuzz >= 2.6.0
 Requires:	iso-codes
@@ -190,7 +190,7 @@ Summary(pl.UTF-8):	Narzędzie do uaktualniania cache'a ikon używanego przez bib
 Group:		Applications/System
 Requires:	fribidi >= 1.0.6
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.76.0
+Requires:	glib2 >= 1:2.78.0
 Obsoletes:	gtk+4-update-icon-cache < 3.95
 
 %description update-icon-cache
@@ -217,7 +217,7 @@ Requires:	cairo-gobject-devel >= 1.14.0
 Requires:	fontconfig-devel
 Requires:	fribidi-devel >= 1.0.6
 Requires:	gdk-pixbuf2-devel >= 2.31.0
-Requires:	glib2-devel >= 1:2.76.0
+Requires:	glib2-devel >= 1:2.78.0
 Requires:	graphene-devel >= 1.10.0
 Requires:	libepoxy-devel >= 1.4
 Requires:	pango-devel >= 1:1.50.0
@@ -277,7 +277,7 @@ Dokumentacja API GTK.
 Summary:	GTK - example programs
 Summary(pl.UTF-8):	GTK - programy przykładowe
 Group:		X11/Development/Libraries
-Requires(post,postun):	glib2 >= 1:2.76.0
+Requires(post,postun):	glib2 >= 1:2.78.0
 Requires:	%{name}-devel = %{version}-%{release}
 Obsoletes:	gtk+4-examples < 3.95
 
