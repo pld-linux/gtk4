@@ -75,7 +75,7 @@ BuildRequires:	perl-base
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.752
+BuildRequires:	rpmbuild(macros) >= 2.029
 # glslc required to rebuild some files from source
 %{?with_vulkan:BuildRequires:	shaderc}
 BuildRequires:	sqlite3-devel
@@ -352,8 +352,7 @@ Moduł GTK do drukowania przez CUPS.
 %{__sed} -i -e '/^libgtk = / s/shared_library/library/' gtk/meson.build
 %endif
 
-# FIXME: common location for gi-docgen generated docs
-%{__sed} -i -e "/^docs_dir =/ s,gtk_datadir / 'doc','%{_gtkdocdir}'," docs/reference/meson.build
+%{__sed} -i -e "/^docs_dir =/ s,gtk_datadir / 'doc','%{_gidocdir}'," docs/reference/meson.build
 
 %build
 %meson build \
@@ -508,11 +507,11 @@ exit 0
 %if %{with apidocs}
 %files apidocs
 %defattr(644,root,root,755)
-%{_gtkdocdir}/gdk4
-%{_gtkdocdir}/gdk4-wayland
-%{_gtkdocdir}/gdk4-x11
-%{_gtkdocdir}/gsk4
-%{_gtkdocdir}/gtk4
+%{_gidocdir}/gdk4
+%{_gidocdir}/gdk4-wayland
+%{_gidocdir}/gdk4-x11
+%{_gidocdir}/gsk4
+%{_gidocdir}/gtk4
 %endif
 
 %files examples
