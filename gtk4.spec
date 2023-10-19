@@ -4,7 +4,7 @@
 %bcond_without	broadway	# Broadway target
 %bcond_without	wayland		# Wayland target
 %bcond_without	vulkan		# Vulkan graphics support
-%bcond_without	ffmpeg		# FFmpeg media backend
+%bcond_with	ffmpeg		# FFmpeg media backend
 %bcond_without	gstreamer	# GStreamer media backend
 %bcond_with	cpdb		# CPDB print backend
 %bcond_without	cups		# CUPS print backend
@@ -23,7 +23,7 @@ Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
 Version:	4.12.3
-Release:	1
+Release:	2
 License:	LGPL v2+
 Group:		X11/Libraries
 Source0:	https://download.gnome.org/sources/gtk/4.12/gtk-%{version}.tar.xz
