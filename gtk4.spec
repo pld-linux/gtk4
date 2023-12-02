@@ -444,7 +444,9 @@ exit 0
 %dir %{_libdir}/gtk-4.0/%{abivers}
 %dir %{_libdir}/gtk-4.0/%{abivers}/immodules
 %dir %{_libdir}/gtk-4.0/%{abivers}/inspector
+%if %{with ffmpeg} || %{with gstreamer}
 %dir %{_libdir}/gtk-4.0/%{abivers}/media
+%endif
 %dir %{_libdir}/gtk-4.0/%{abivers}/printbackends
 %attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-file.so
 %{_libdir}/girepository-1.0/Gdk-4.0.typelib
