@@ -4,7 +4,6 @@
 %bcond_without	broadway	# Broadway target
 %bcond_without	wayland		# Wayland target
 %bcond_without	vulkan		# Vulkan graphics support
-%bcond_with	ffmpeg		# FFmpeg media backend
 %bcond_without	gstreamer	# GStreamer media backend
 %bcond_with	cpdb		# CPDB print backend
 %bcond_without	cups		# CUPS print backend
@@ -22,20 +21,20 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.12.5
+Version:	4.14.0
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	https://download.gnome.org/sources/gtk/4.12/gtk-%{version}.tar.xz
-# Source0-md5:	45db1b94414e7a9f63bd32db9557edf0
+Source0:	https://download.gnome.org/sources/gtk/4.14/gtk-%{version}.tar.xz
+# Source0-md5:	3657826dc534d7b278b6d23fd1914b5c
 Patch0:		%{name}-print-backends.patch
 URL:		https://www.gtk.org/
-%{?with_vulkan:BuildRequires:	Vulkan-Loader-devel}
+%{?with_vulkan:BuildRequires:	Vulkan-Loader-devel >= 1.3}
 # cairo-gobject + cairo-pdf,cairo-ps,cairo-svg
 BuildRequires:	cairo-gobject-devel >= 1.14.0
 BuildRequires:	colord-devel >= 0.1.9
 %if %{with cpdb}
-BuildRequires:	cpdb-libs-devel >= 2.0
+BuildRequires:	cpdb-frontend-devel >= 2.0
 %endif
 %if %{with cups}
 BuildRequires:	cups-devel >= 1:2.0
@@ -44,8 +43,6 @@ BuildRequires:	docbook-dtd412-xml
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docutils
 BuildRequires:	fontconfig-devel
-# libavfilter >= 6.47.100, libavformat >= 57.41.100, libavcodec >= 57.48.101, libavutil >= 55.28.100, libswscale >= 4.6.100
-%{?with_ffmpeg:BuildRequires:	ffmpeg-devel >= 3.1.1}
 BuildRequires:	freetype-devel >= 1:2.7.1
 BuildRequires:	fribidi-devel >= 1.0.6
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.0
@@ -55,6 +52,9 @@ BuildRequires:	glib2-devel >= 1:2.78.0
 BuildRequires:	gobject-introspection-devel >= 1.76.0
 BuildRequires:	graphene-devel >= 1.10.0
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
+%{?with_gstreamer:BuildRequires:	gstreamer-gl-devel >= 1.12.3}
+# TODO: pkgconfig(gstreamer-allocators-1.0)
+#%{?with_gstreamer:BuildRequires:	gstreamer-plugins-base-devel >= 1.23.1}
 # pkgconfig(gstreamer-player-1.0)
 %{?with_gstreamer:BuildRequires:	gstreamer-plugins-bad-devel >= 1.12.3}
 BuildRequires:	harfbuzz-devel >= 2.6.0
@@ -99,7 +99,7 @@ BuildRequires:	xz
 # wayland-client, wayland-cursor, wayland-scanner
 BuildRequires:	wayland-devel >= 1.21.0
 BuildRequires:	wayland-egl-devel
-BuildRequires:	wayland-protocols >= 1.31
+BuildRequires:	wayland-protocols >= 1.32
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	xorg-lib-libX11 >= 1.5.0
@@ -131,6 +131,7 @@ Obsoletes:	gtk+4 < 3.95
 Obsoletes:	gtk+4-papi < 3.94
 Obsoletes:	gtk+4-cloudprint < 3.95
 Obsoletes:	gtk4-cloudprint < 4.4
+Obsoletes:	gtk4-media-ffmpeg < 4.13.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		abivers	4.0.0
@@ -234,7 +235,7 @@ Requires:	xorg-lib-libXrandr-devel >= 1.5.0
 %if %{with wayland}
 Requires:	wayland-devel >= 1.21.0
 Requires:	wayland-egl-devel
-Requires:	wayland-protocols >= 1.25
+Requires:	wayland-protocols >= 1.32
 Requires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	zlib-devel
@@ -286,25 +287,15 @@ GTK - example programs.
 %description examples -l pl.UTF-8
 GTK - przykładowe programy.
 
-%package media-ffmpeg
-Summary:	FFmpeg media backend for GTK
-Summary(pl.UTF-8):	Backend multimedialny FFmpeg dla GTK
-Group:		X11/Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	ffmpeg-libs >= 3.1.1
-
-%description media-ffmpeg
-FFmpeg media backend for GTK.
-
-%description media-ffmpeg -l pl.UTF-8
-Backend multimedialny FFmpeg dla GTK.
-
 %package media-gstreamer
 Summary:	GStreamer media backend for GTK
 Summary(pl.UTF-8):	Backend multimedialny GStreamer dla GTK
 Group:		X11/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	gstreamer >= 1.12.3
+Requires:	gstreamer-gl-libs >= 1.12.3
+Requires:	gstreamer-plugins-bad >= 1.12.3
+#%{?with_gstreamer:Requires:	gstreamer-plugins-base >= 1.23.1}
 
 %description media-gstreamer
 GStreamer media backend for GTK.
@@ -361,7 +352,6 @@ Moduł GTK do drukowania przez CUPS.
 	%{?with_apidocs:-Dgtk_doc=true} \
 	-Dintrospection=enabled \
 	-Dman-pages=true \
-	%{?with_ffmpeg:-Dmedia-ffmpeg=enabled} \
 	%{!?with_gstreamer:-Dmedia-gstreamer=disabled} \
 	%{?with_cpdb:-Dprint-cpdb=enabled} \
 	%{!?with_cups:-Dprint-cups=disabled} \
@@ -444,7 +434,7 @@ exit 0
 %dir %{_libdir}/gtk-4.0/%{abivers}
 %dir %{_libdir}/gtk-4.0/%{abivers}/immodules
 %dir %{_libdir}/gtk-4.0/%{abivers}/inspector
-%if %{with ffmpeg} || %{with gstreamer}
+%if %{with gstreamer}
 %dir %{_libdir}/gtk-4.0/%{abivers}/media
 %endif
 %dir %{_libdir}/gtk-4.0/%{abivers}/printbackends
@@ -474,10 +464,12 @@ exit 0
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gtk4-builder-tool
+%attr(755,root,root) %{_bindir}/gtk4-path-tool
 %attr(755,root,root) %{_bindir}/gtk4-query-settings
 %attr(755,root,root) %{_libdir}/libgtk-4.so
 %{_includedir}/gtk-4.0
 %{_pkgconfigdir}/gtk4.pc
+%{_pkgconfigdir}/gtk4-atspi.pc
 %{_pkgconfigdir}/gtk4-unix-print.pc
 %{_pkgconfigdir}/gtk4-x11.pc
 %if %{with broadway}
@@ -497,6 +489,7 @@ exit 0
 %{_datadir}/gir-1.0/Gsk-4.0.gir
 %{_datadir}/gir-1.0/Gtk-4.0.gir
 %{_mandir}/man1/gtk4-builder-tool.1*
+%{_mandir}/man1/gtk4-path-tool.1*
 %{_mandir}/man1/gtk4-query-settings.1*
 
 %if %{with static_libs}
@@ -554,12 +547,6 @@ exit 0
 %{_mandir}/man1/gtk4-rendernode-tool.1*
 %{_mandir}/man1/gtk4-widget-factory.1*
 %{_examplesdir}/%{name}-%{version}
-
-%if %{with ffmpeg}
-%files media-ffmpeg
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/media/libmedia-ffmpeg.so
-%endif
 
 %if %{with gstreamer}
 %files media-gstreamer
