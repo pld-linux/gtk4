@@ -22,7 +22,7 @@ Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
 Version:	4.14.0
-Release:	1
+Release:	2
 License:	LGPL v2+
 Group:		X11/Libraries
 Source0:	https://download.gnome.org/sources/gtk/4.14/gtk-%{version}.tar.xz
@@ -53,8 +53,8 @@ BuildRequires:	gobject-introspection-devel >= 1.76.0
 BuildRequires:	graphene-devel >= 1.10.0
 %{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
 %{?with_gstreamer:BuildRequires:	gstreamer-gl-devel >= 1.12.3}
-# TODO: pkgconfig(gstreamer-allocators-1.0)
-#%{?with_gstreamer:BuildRequires:	gstreamer-plugins-base-devel >= 1.23.1}
+# pkgconfig(gstreamer-allocators-1.0) >= 1.23.1
+%{?with_gstreamer:BuildRequires:	gstreamer-plugins-base-devel >= 1.23.1}
 # pkgconfig(gstreamer-player-1.0)
 %{?with_gstreamer:BuildRequires:	gstreamer-plugins-bad-devel >= 1.12.3}
 BuildRequires:	harfbuzz-devel >= 2.6.0
@@ -295,7 +295,7 @@ Requires:	%{name} = %{version}-%{release}
 Requires:	gstreamer >= 1.12.3
 Requires:	gstreamer-gl-libs >= 1.12.3
 Requires:	gstreamer-plugins-bad >= 1.12.3
-#%{?with_gstreamer:Requires:	gstreamer-plugins-base >= 1.23.1}
+Requires:	gstreamer-plugins-base >= 1.23.1
 
 %description media-gstreamer
 GStreamer media backend for GTK.
