@@ -21,17 +21,17 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.14.5
+Version:	4.16.0
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	https://download.gnome.org/sources/gtk/4.14/gtk-%{version}.tar.xz
-# Source0-md5:	4d7c8edbdd0aed4048053ca9f805ade4
+Source0:	https://download.gnome.org/sources/gtk/4.16/gtk-%{version}.tar.xz
+# Source0-md5:	33666e441030f3a965d2a1d2834dda8a
 Patch0:		%{name}-print-backends.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel >= 1.3}
 # cairo-gobject + cairo-pdf,cairo-ps,cairo-svg
-BuildRequires:	cairo-gobject-devel >= 1.14.0
+BuildRequires:	cairo-gobject-devel >= 1.18.0
 BuildRequires:	colord-devel >= 0.1.9
 %if %{with cpdb}
 BuildRequires:	cpdb-frontend-devel >= 2.0
@@ -51,12 +51,12 @@ BuildRequires:	gettext-tools >= 0.19.7
 BuildRequires:	glib2-devel >= 1:2.78.0
 BuildRequires:	gobject-introspection-devel >= 1.76.0
 BuildRequires:	graphene-devel >= 1.10.0
-%{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.12.3}
-%{?with_gstreamer:BuildRequires:	gstreamer-gl-devel >= 1.12.3}
+%{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.24.0}
+%{?with_gstreamer:BuildRequires:	gstreamer-gl-devel >= 1.24.0}
 # pkgconfig(gstreamer-allocators-1.0) >= 1.23.1
-%{?with_gstreamer:BuildRequires:	gstreamer-plugins-base-devel >= 1.23.1}
+%{?with_gstreamer:BuildRequires:	gstreamer-plugins-base-devel >= 1.24.0}
 # pkgconfig(gstreamer-player-1.0)
-%{?with_gstreamer:BuildRequires:	gstreamer-plugins-bad-devel >= 1.12.3}
+%{?with_gstreamer:BuildRequires:	gstreamer-plugins-bad-devel >= 1.24.0}
 BuildRequires:	harfbuzz-devel >= 2.6.0
 BuildRequires:	iso-codes
 %{?with_cloudproviders:BuildRequires:	libcloudproviders-devel >= 0.3.1}
@@ -70,7 +70,7 @@ BuildRequires:	libxml2-progs >= 1:2.6.31
 BuildRequires:	libxslt-progs >= 1.1.20
 BuildRequires:	meson >= 0.63
 BuildRequires:	ninja >= 1.5
-BuildRequires:	pango-devel >= 1:1.50.0
+BuildRequires:	pango-devel >= 1:1.52.0
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
@@ -99,12 +99,12 @@ BuildRequires:	xz
 # wayland-client, wayland-cursor, wayland-scanner
 BuildRequires:	wayland-devel >= 1.21.0
 BuildRequires:	wayland-egl-devel
-BuildRequires:	wayland-protocols >= 1.32
+BuildRequires:	wayland-protocols >= 1.36
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	xorg-lib-libX11 >= 1.5.0
 Requires(post,postun):	glib2 >= 1:2.78.0
-Requires:	cairo-gobject >= 1.14.0
+Requires:	cairo-gobject >= 1.18.0
 Requires:	freetype >= 1:2.7.1
 Requires:	fribidi >= 1.0.6
 Requires:	gdk-pixbuf2 >= 2.31.0
@@ -114,7 +114,7 @@ Requires:	harfbuzz >= 2.6.0
 Requires:	iso-codes
 %{?with_cloudproviders:Requires:	libcloudproviders >= 0.3.1}
 Requires:	libepoxy >= 1.4
-Requires:	pango >= 1:1.50.0
+Requires:	pango >= 1:1.52.0
 Requires:	xorg-lib-libXi >= 1.8
 Requires:	xorg-lib-libXrandr >= 1.5.0
 %if %{with wayland}
@@ -214,14 +214,14 @@ Summary(tr.UTF-8):	GIMP araç takımı ve çizim takımı
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 %{?with_vulkan:Requires:	Vulkan-Loader-devel}
-Requires:	cairo-gobject-devel >= 1.14.0
+Requires:	cairo-gobject-devel >= 1.18.0
 Requires:	fontconfig-devel
 Requires:	fribidi-devel >= 1.0.6
 Requires:	gdk-pixbuf2-devel >= 2.31.0
 Requires:	glib2-devel >= 1:2.78.0
 Requires:	graphene-devel >= 1.10.0
 Requires:	libepoxy-devel >= 1.4
-Requires:	pango-devel >= 1:1.50.0
+Requires:	pango-devel >= 1:1.52.0
 Requires:	shared-mime-info
 Requires:	xorg-lib-libX11-devel >= 1.5.0
 Requires:	xorg-lib-libXcomposite-devel
@@ -292,10 +292,10 @@ Summary:	GStreamer media backend for GTK
 Summary(pl.UTF-8):	Backend multimedialny GStreamer dla GTK
 Group:		X11/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	gstreamer >= 1.12.3
-Requires:	gstreamer-gl-libs >= 1.12.3
-Requires:	gstreamer-plugins-bad >= 1.12.3
-Requires:	gstreamer-plugins-base >= 1.23.1
+Requires:	gstreamer >= 1.24.0
+Requires:	gstreamer-gl-libs >= 1.24.0
+Requires:	gstreamer-plugins-bad >= 1.24.0
+Requires:	gstreamer-plugins-base >= 1.24.0
 
 %description media-gstreamer
 GStreamer media backend for GTK.
@@ -349,7 +349,7 @@ Moduł GTK do drukowania przez CUPS.
 	%{?with_broadway:-Dbroadway-backend=true} \
 	%{?with_cloudproviders:-Dcloudproviders=enabled} \
 	-Dcolord=enabled \
-	%{?with_apidocs:-Dgtk_doc=true} \
+	%{?with_apidocs:-Ddocumentation=true} \
 	-Dintrospection=enabled \
 	-Dman-pages=true \
 	%{!?with_gstreamer:-Dmedia-gstreamer=disabled} \
@@ -513,6 +513,7 @@ exit 0
 %attr(755,root,root) %{_bindir}/gtk4-demo
 %attr(755,root,root) %{_bindir}/gtk4-demo-application
 %attr(755,root,root) %{_bindir}/gtk4-icon-browser
+%attr(755,root,root) %{_bindir}/gtk4-image-tool
 %attr(755,root,root) %{_bindir}/gtk4-node-editor
 %attr(755,root,root) %{_bindir}/gtk4-print-editor
 %attr(755,root,root) %{_bindir}/gtk4-rendernode-tool
@@ -543,6 +544,7 @@ exit 0
 %{_mandir}/man1/gtk4-demo.1*
 %{_mandir}/man1/gtk4-demo-application.1*
 %{_mandir}/man1/gtk4-icon-browser.1*
+%{_mandir}/man1/gtk4-image-tool.1*
 %{_mandir}/man1/gtk4-node-editor.1*
 %{_mandir}/man1/gtk4-rendernode-tool.1*
 %{_mandir}/man1/gtk4-widget-factory.1*
