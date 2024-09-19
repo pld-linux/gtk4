@@ -58,6 +58,7 @@ BuildRequires:	graphene-devel >= 1.10.0
 # pkgconfig(gstreamer-player-1.0)
 %{?with_gstreamer:BuildRequires:	gstreamer-plugins-bad-devel >= 1.24.0}
 BuildRequires:	harfbuzz-devel >= 2.6.0
+BuildRequires:	harfbuzz-subset-devel >= 2.6.0
 BuildRequires:	iso-codes
 %{?with_cloudproviders:BuildRequires:	libcloudproviders-devel >= 0.3.1}
 BuildRequires:	libepoxy-devel >= 1.4
@@ -111,6 +112,7 @@ Requires:	gdk-pixbuf2 >= 2.31.0
 Requires:	glib2 >= 1:2.78.0
 Requires:	graphene >= 1.10.0
 Requires:	harfbuzz >= 2.6.0
+Requires:	harfbuzz-subset >= 2.6.0
 Requires:	iso-codes
 %{?with_cloudproviders:Requires:	libcloudproviders >= 0.3.1}
 Requires:	libepoxy >= 1.4
