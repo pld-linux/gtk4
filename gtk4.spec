@@ -21,12 +21,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.16.7
+Version:	4.16.12
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
 Source0:	https://download.gnome.org/sources/gtk/4.16/gtk-%{version}.tar.xz
-# Source0-md5:	e8d88098daebb2c573690827152908ac
+# Source0-md5:	0f2b154a0b05e4ca94a05aaeb7e1f3fb
 Patch0:		%{name}-print-backends.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel >= 1.3}
@@ -76,7 +76,7 @@ BuildRequires:	perl-base
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 2.029
+BuildRequires:	rpmbuild(macros) >= 2.042
 # glslc required to rebuild some files from source
 %{?with_vulkan:BuildRequires:	shaderc}
 BuildRequires:	sqlite3-devel
@@ -347,7 +347,7 @@ Moduł GTK do drukowania przez CUPS.
 %{__sed} -i -e "/^docs_dir =/ s,gtk_datadir / 'doc','%{_gidocdir}'," docs/reference/meson.build
 
 %build
-%meson build \
+%meson \
 	%{?with_broadway:-Dbroadway-backend=true} \
 	%{?with_cloudproviders:-Dcloudproviders=enabled} \
 	-Dcolord=enabled \
@@ -362,12 +362,12 @@ Moduł GTK do drukowania przez CUPS.
 	%{!?with_vulkan:-Dvulkan=disabled} \
 	%{!?with_wayland:-Dwayland-backend=false}
 
-%ninja_build -C build
+%meson_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%ninja_install -C build
+%meson_install
 
 install -d $RPM_BUILD_ROOT%{_libdir}/gtk-4.0/%{abivers}/{immodules,inspector}
 
