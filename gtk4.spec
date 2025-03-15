@@ -21,17 +21,17 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.16.12
+Version:	4.18.1
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	https://download.gnome.org/sources/gtk/4.16/gtk-%{version}.tar.xz
-# Source0-md5:	0f2b154a0b05e4ca94a05aaeb7e1f3fb
+Source0:	https://download.gnome.org/sources/gtk/4.18/gtk-%{version}.tar.xz
+# Source0-md5:	ed0035fae7b9d440739df761b4a55822
 Patch0:		%{name}-print-backends.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel >= 1.3}
 # cairo-gobject + cairo-pdf,cairo-ps,cairo-svg
-BuildRequires:	cairo-gobject-devel >= 1.18.0
+BuildRequires:	cairo-gobject-devel >= 1.18.2
 BuildRequires:	colord-devel >= 0.1.9
 %if %{with cpdb}
 BuildRequires:	cpdb-frontend-devel >= 2.0
@@ -57,19 +57,19 @@ BuildRequires:	graphene-devel >= 1.10.0
 %{?with_gstreamer:BuildRequires:	gstreamer-plugins-base-devel >= 1.24.0}
 # pkgconfig(gstreamer-player-1.0)
 %{?with_gstreamer:BuildRequires:	gstreamer-plugins-bad-devel >= 1.24.0}
-BuildRequires:	harfbuzz-devel >= 2.6.0
-BuildRequires:	harfbuzz-subset-devel >= 2.6.0
+BuildRequires:	harfbuzz-devel >= 8.4.0
+BuildRequires:	harfbuzz-subset-devel >= 8.4.0
 BuildRequires:	iso-codes
 %{?with_cloudproviders:BuildRequires:	libcloudproviders-devel >= 0.3.1}
 BuildRequires:	libepoxy-devel >= 1.4
 BuildRequires:	libjpeg-turbo-devel
 BuildRequires:	libpng-devel
-BuildRequires:	libstdc++-devel
+BuildRequires:	libstdc++-devel >= 6:4.7
 BuildRequires:	libtiff-devel >= 4
 BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	libxml2-progs >= 1:2.6.31
 BuildRequires:	libxslt-progs >= 1.1.20
-BuildRequires:	meson >= 0.63
+BuildRequires:	meson >= 1.2.0
 BuildRequires:	ninja >= 1.5
 BuildRequires:	pango-devel >= 1:1.52.0
 BuildRequires:	perl-base
@@ -98,21 +98,21 @@ BuildRequires:	xz
 %{?with_broadway:BuildRequires:	zlib-devel}
 %if %{with wayland}
 # wayland-client, wayland-cursor, wayland-scanner
-BuildRequires:	wayland-devel >= 1.21.0
+BuildRequires:	wayland-devel >= 1.23.0
 BuildRequires:	wayland-egl-devel
-BuildRequires:	wayland-protocols >= 1.36
+BuildRequires:	wayland-protocols >= 1.41
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	xorg-lib-libX11 >= 1.5.0
 Requires(post,postun):	glib2 >= 1:2.78.0
-Requires:	cairo-gobject >= 1.18.0
+Requires:	cairo-gobject >= 1.18.2
 Requires:	freetype >= 1:2.7.1
 Requires:	fribidi >= 1.0.6
 Requires:	gdk-pixbuf2 >= 2.31.0
 Requires:	glib2 >= 1:2.78.0
 Requires:	graphene >= 1.10.0
-Requires:	harfbuzz >= 2.6.0
-Requires:	harfbuzz-subset >= 2.6.0
+Requires:	harfbuzz >= 8.4.0
+Requires:	harfbuzz-subset >= 8.4.0
 Requires:	iso-codes
 %{?with_cloudproviders:Requires:	libcloudproviders >= 0.3.1}
 Requires:	libepoxy >= 1.4
@@ -120,7 +120,7 @@ Requires:	pango >= 1:1.52.0
 Requires:	xorg-lib-libXi >= 1.8
 Requires:	xorg-lib-libXrandr >= 1.5.0
 %if %{with wayland}
-Requires:	wayland >= 1.21.0
+Requires:	wayland >= 1.23.0
 Requires:	xorg-lib-libxkbcommon >= 0.2.0
 %endif
 # evince is used as gtk-print-preview-command by default
@@ -216,7 +216,7 @@ Summary(tr.UTF-8):	GIMP araç takımı ve çizim takımı
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 %{?with_vulkan:Requires:	Vulkan-Loader-devel}
-Requires:	cairo-gobject-devel >= 1.18.0
+Requires:	cairo-gobject-devel >= 1.18.2
 Requires:	fontconfig-devel
 Requires:	fribidi-devel >= 1.0.6
 Requires:	gdk-pixbuf2-devel >= 2.31.0
@@ -235,9 +235,9 @@ Requires:	xorg-lib-libXi-devel >= 1.8
 Requires:	xorg-lib-libXinerama-devel
 Requires:	xorg-lib-libXrandr-devel >= 1.5.0
 %if %{with wayland}
-Requires:	wayland-devel >= 1.21.0
+Requires:	wayland-devel >= 1.23.0
 Requires:	wayland-egl-devel
-Requires:	wayland-protocols >= 1.32
+Requires:	wayland-protocols >= 1.41
 Requires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	zlib-devel
@@ -356,7 +356,7 @@ Moduł GTK do drukowania przez CUPS.
 	-Dman-pages=true \
 	%{!?with_gstreamer:-Dmedia-gstreamer=disabled} \
 	%{?with_cpdb:-Dprint-cpdb=enabled} \
-	%{!?with_cups:-Dprint-cups=disabled} \
+	-Dprint-cups=%{__enabled_disabled cups} \
 	%{?with_sysprof:-Dsysprof=enabled} \
 	%{?with_tracker:-Dtracker=enabled} \
 	%{!?with_vulkan:-Dvulkan=disabled} \
@@ -514,7 +514,6 @@ exit 0
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gtk4-demo
 %attr(755,root,root) %{_bindir}/gtk4-demo-application
-%attr(755,root,root) %{_bindir}/gtk4-icon-browser
 %attr(755,root,root) %{_bindir}/gtk4-image-tool
 %attr(755,root,root) %{_bindir}/gtk4-node-editor
 %attr(755,root,root) %{_bindir}/gtk4-print-editor
@@ -522,30 +521,25 @@ exit 0
 %attr(755,root,root) %{_bindir}/gtk4-widget-factory
 %{_datadir}/glib-2.0/schemas/org.gtk.Demo4.gschema.xml
 %{_datadir}/metainfo/org.gtk.Demo4.appdata.xml
-%{_datadir}/metainfo/org.gtk.IconBrowser4.appdata.xml
 %{_datadir}/metainfo/org.gtk.PrintEditor4.appdata.xml
 %{_datadir}/metainfo/org.gtk.WidgetFactory4.appdata.xml
 %{_datadir}/metainfo/org.gtk.gtk4.NodeEditor.appdata.xml
 %{_desktopdir}/org.gtk.Demo4.desktop
-%{_desktopdir}/org.gtk.IconBrowser4.desktop
 %{_desktopdir}/org.gtk.PrintEditor4.desktop
 %{_desktopdir}/org.gtk.WidgetFactory4.desktop
 %{_desktopdir}/org.gtk.gtk4.NodeEditor.desktop
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.Demo4.svg
-%{_iconsdir}/hicolor/scalable/apps/org.gtk.IconBrowser4.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.PrintEditor4.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.PrintEditor4.Devel.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.WidgetFactory4.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.gtk4.NodeEditor.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.gtk4.NodeEditor.Devel.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.Demo4-symbolic.svg
-%{_iconsdir}/hicolor/symbolic/apps/org.gtk.IconBrowser4-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.PrintEditor4-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.WidgetFactory4-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.gtk4.NodeEditor-symbolic.svg
 %{_mandir}/man1/gtk4-demo.1*
 %{_mandir}/man1/gtk4-demo-application.1*
-%{_mandir}/man1/gtk4-icon-browser.1*
 %{_mandir}/man1/gtk4-image-tool.1*
 %{_mandir}/man1/gtk4-node-editor.1*
 %{_mandir}/man1/gtk4-rendernode-tool.1*
