@@ -21,12 +21,12 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.18.2
+Version:	4.18.3
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
 Source0:	https://download.gnome.org/sources/gtk/4.18/gtk-%{version}.tar.xz
-# Source0-md5:	33ec5858e6119cb43172e92890cbbdc2
+# Source0-md5:	c10fe4c8ab3d4bbf88593e829ada85d3
 Patch0:		%{name}-print-backends.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel >= 1.3}
@@ -449,6 +449,7 @@ exit 0
 %{_libdir}/girepository-1.0/Gsk-4.0.typelib
 %{_libdir}/girepository-1.0/Gtk-4.0.typelib
 
+%{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Inspector.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Settings.ColorChooser.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Settings.Debug.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Settings.EmojiChooser.gschema.xml
