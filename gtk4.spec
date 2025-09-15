@@ -243,13 +243,33 @@ Summary(tr.UTF-8):	GIMP araç takımı ve çizim takımı
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 %{?with_vulkan:Requires:	Vulkan-Loader-devel >= 1.3}
+%{?with_accesskit:Requires:	accesskit-c-devel >= 0.17}
 Requires:	cairo-gobject-devel >= 1.18.2
+Requires:	colord-devel >= 0.1.9
+%{?with_cpdb:Requires:	cpdb-libs-devel >= 2.0}
+%{?with_cups:Requires:	cups-devel >= 1:2.0}
 Requires:	fontconfig-devel
 Requires:	fribidi-devel >= 1.0.6
 Requires:	gdk-pixbuf2-devel >= 2.31.0
 Requires:	glib2-devel >= 1:2.78.0
 Requires:	graphene-devel >= 1.10.0
+%if %{with gstreamer}
+Requires:	gstreamer-devel >= 1.24.0
+Requires:	gstreamer-gl-devel >= 1.24.0
+# pkgconfig(gstreamer-allocators-1.0)
+Requires:	gstreamer-plugins-base-devel >= 1.24.0
+# pkgconfig(gstreamer-play-1.0)
+Requires:	gstreamer-plugins-bad-devel >= 1.24.0
+%endif
+Requires:	harfbuzz-devel >= 8.4.0
+Requires:	harfbuzz-subset-devel >= 8.4.0
+%{?with_cloudproviders:Requires:	libcloudproviders-devel >= 0.3.1}
+Requires:	libdrm-devel
 Requires:	libepoxy-devel >= 1.4
+Requires:	libjpeg-turbo-devel
+Requires:	libpng-devel
+Requires:	librsvg-devel >= 2.48
+Requires:	libtiff-devel >= 4
 Requires:	pango-devel >= 1:1.52.0
 Requires:	shared-mime-info
 Requires:	xorg-lib-libX11-devel >= 1.5.0
