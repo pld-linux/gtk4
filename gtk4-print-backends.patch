@@ -1,13 +1,13 @@
---- gtk-4.10.1/modules/printbackends/meson.build.orig	2023-03-22 17:53:14.882878089 +0100
-+++ gtk-4.10.1/modules/printbackends/meson.build	2023-03-22 20:30:37.471723193 +0100
-@@ -26,7 +26,9 @@ if get_option('print-cpdb').enabled() an
-     install_dir: printbackends_install_dir,
-     install: true,
-   )
+--- gtk-4.20.1/gtk/print/backends/meson.build.orig	2025-09-08 22:57:32.000000000 +0200
++++ gtk-4.20.1/gtk/print/backends/meson.build	2025-09-14 21:51:07.010046174 +0200
+@@ -14,7 +14,9 @@ if get_option('print-cpdb').enabled() an
+   ])
+   print_backend_deps += [cpdb_dep]
+   cdata.set('HAVE_PRINTBACKEND_CPDB', 1)
 -elif cups_dep.found()
 +endif
 +
 +if not get_option('print-cups').disabled() and cups_dep.found()
    print_backends += 'cups'
-   shared_module('printbackend-cups',
-     sources: [
+   print_backend_sources += files([
+     'gtkprintbackendcups.c',

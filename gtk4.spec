@@ -8,6 +8,7 @@
 %bcond_with	cpdb		# CPDB print backend
 %bcond_without	cups		# CUPS print backend
 %bcond_without	cloudproviders	# cloudproviders support
+%bcond_without	accesskit	# AccessKit accessibility backend
 %bcond_without	static_libs	# static library
 %bcond_with	sysprof		# sysprof tracing support
 %bcond_with	tracker		# Tracker3 filechooser search
@@ -21,22 +22,25 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.18.6
+Version:	4.20.1
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	https://download.gnome.org/sources/gtk/4.18/gtk-%{version}.tar.xz
-# Source0-md5:	9ad89b1e6a71ac3a06ca8bbeed6fd466
+Source0:	https://download.gnome.org/sources/gtk/4.20/gtk-%{version}.tar.xz
+# Source0-md5:	865e4e4e592d2e166406508d0324a146
 Patch0:		%{name}-print-backends.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel >= 1.3}
+%{?with_accesskit:BuildRequires:	accesskit-c-devel >= 0.17}
+BuildRequires:	bash
 # cairo-gobject + cairo-pdf,cairo-ps,cairo-svg
 BuildRequires:	cairo-gobject-devel >= 1.18.2
 BuildRequires:	colord-devel >= 0.1.9
 %if %{with cpdb}
-BuildRequires:	cpdb-frontend-devel >= 2.0
+BuildRequires:	cpdb-libs-devel >= 2.0
 %endif
 %if %{with cups}
+# or libcups-devel >= 3.0, 2 is preferred currently
 BuildRequires:	cups-devel >= 1:2.0
 %endif
 BuildRequires:	docbook-dtd412-xml
@@ -45,31 +49,38 @@ BuildRequires:	docutils
 BuildRequires:	fontconfig-devel
 BuildRequires:	freetype-devel >= 1:2.7.1
 BuildRequires:	fribidi-devel >= 1.0.6
+# c_std=gnu11
+BuildRequires:	gcc >= 6:4.7
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.0
 BuildRequires:	gettext-tools >= 0.19.7
 %{?with_apidocs:BuildRequires:	gi-docgen >= 2021.1}
 BuildRequires:	glib2-devel >= 1:2.78.0
-BuildRequires:	gobject-introspection-devel >= 1.76.0
+BuildRequires:	gobject-introspection-devel >= 1.84
 BuildRequires:	graphene-devel >= 1.10.0
-%{?with_gstreamer:BuildRequires:	gstreamer-devel >= 1.24.0}
-%{?with_gstreamer:BuildRequires:	gstreamer-gl-devel >= 1.24.0}
-# pkgconfig(gstreamer-allocators-1.0) >= 1.23.1
-%{?with_gstreamer:BuildRequires:	gstreamer-plugins-base-devel >= 1.24.0}
-# pkgconfig(gstreamer-player-1.0)
-%{?with_gstreamer:BuildRequires:	gstreamer-plugins-bad-devel >= 1.24.0}
+%if %{with gstreamer}
+BuildRequires:	gstreamer-devel >= 1.24.0
+BuildRequires:	gstreamer-gl-devel >= 1.24.0
+# pkgconfig(gstreamer-allocators-1.0)
+BuildRequires:	gstreamer-plugins-base-devel >= 1.24.0
+# pkgconfig(gstreamer-play-1.0)
+BuildRequires:	gstreamer-plugins-bad-devel >= 1.24.0
+%endif
 BuildRequires:	harfbuzz-devel >= 8.4.0
 BuildRequires:	harfbuzz-subset-devel >= 8.4.0
 BuildRequires:	iso-codes
 %{?with_cloudproviders:BuildRequires:	libcloudproviders-devel >= 0.3.1}
+BuildRequires:	libdrm-devel
 BuildRequires:	libepoxy-devel >= 1.4
 BuildRequires:	libjpeg-turbo-devel
 BuildRequires:	libpng-devel
+BuildRequires:	librsvg-devel >= 2.48
+# cpp_std=c++11
 BuildRequires:	libstdc++-devel >= 6:4.7
 BuildRequires:	libtiff-devel >= 4
 BuildRequires:	libtool >= 2:2.2.6
 BuildRequires:	libxml2-progs >= 1:2.6.31
 BuildRequires:	libxslt-progs >= 1.1.20
-BuildRequires:	meson >= 1.2.0
+BuildRequires:	meson >= 1.8.0
 BuildRequires:	ninja >= 1.5
 BuildRequires:	pango-devel >= 1:1.52.0
 BuildRequires:	perl-base
@@ -98,29 +109,41 @@ BuildRequires:	xz
 %{?with_broadway:BuildRequires:	zlib-devel}
 %if %{with wayland}
 # wayland-client, wayland-cursor, wayland-scanner
-BuildRequires:	wayland-devel >= 1.23.0
+BuildRequires:	wayland-devel >= 1.24.0
 BuildRequires:	wayland-egl-devel
-BuildRequires:	wayland-protocols >= 1.41
+BuildRequires:	wayland-protocols >= 1.44
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
-Requires:	xorg-lib-libX11 >= 1.5.0
 Requires(post,postun):	glib2 >= 1:2.78.0
 Requires:	cairo-gobject >= 1.18.2
+%if %{with cpdb}
+Requires:	cpdb-libs >= 2.0
+%endif
+%if %{with cups}
+Requires:	cups-lib >= 2.0
+%endif
 Requires:	freetype >= 1:2.7.1
 Requires:	fribidi >= 1.0.6
 Requires:	gdk-pixbuf2 >= 2.31.0
 Requires:	glib2 >= 1:2.78.0
 Requires:	graphene >= 1.10.0
+%if %{with gstreamer}
+Requires:	gstreamer >= 1.24.0
+Requires:	gstreamer-gl-libs >= 1.24.0
+Requires:	gstreamer-plugins-bad >= 1.24.0
+Requires:	gstreamer-plugins-base >= 1.24.0
+%endif
 Requires:	harfbuzz >= 8.4.0
 Requires:	harfbuzz-subset >= 8.4.0
 Requires:	iso-codes
 %{?with_cloudproviders:Requires:	libcloudproviders >= 0.3.1}
 Requires:	libepoxy >= 1.4
 Requires:	pango >= 1:1.52.0
+Requires:	xorg-lib-libX11 >= 1.5.0
 Requires:	xorg-lib-libXi >= 1.8
 Requires:	xorg-lib-libXrandr >= 1.5.0
 %if %{with wayland}
-Requires:	wayland >= 1.23.0
+Requires:	wayland >= 1.24.0
 Requires:	xorg-lib-libxkbcommon >= 0.2.0
 %endif
 # evince is used as gtk-print-preview-command by default
@@ -130,10 +153,14 @@ Suggests:	evince-backend-pdf
 Suggests:	%{name}-cups = %{version}-%{release}
 %endif
 Obsoletes:	gtk+4 < 3.95
+Obsoletes:	gtk+4-cups < 3.95
 Obsoletes:	gtk+4-papi < 3.94
 Obsoletes:	gtk+4-cloudprint < 3.95
 Obsoletes:	gtk4-cloudprint < 4.4
+Obsoletes:	gtk4-cups < 4.19.2
 Obsoletes:	gtk4-media-ffmpeg < 4.13.7
+Obsoletes:	gtk4-media-gstreamer < 4.19.2
+Obsoletes:	gtk4-print-cpdb < 4.19.2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		abivers	4.0.0
@@ -215,7 +242,7 @@ Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja do GTK
 Summary(tr.UTF-8):	GIMP araç takımı ve çizim takımı
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-%{?with_vulkan:Requires:	Vulkan-Loader-devel}
+%{?with_vulkan:Requires:	Vulkan-Loader-devel >= 1.3}
 Requires:	cairo-gobject-devel >= 1.18.2
 Requires:	fontconfig-devel
 Requires:	fribidi-devel >= 1.0.6
@@ -235,9 +262,9 @@ Requires:	xorg-lib-libXi-devel >= 1.8
 Requires:	xorg-lib-libXinerama-devel
 Requires:	xorg-lib-libXrandr-devel >= 1.5.0
 %if %{with wayland}
-Requires:	wayland-devel >= 1.23.0
+Requires:	wayland-devel >= 1.24.0
 Requires:	wayland-egl-devel
-Requires:	wayland-protocols >= 1.41
+Requires:	wayland-protocols >= 1.44
 Requires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
 Requires:	zlib-devel
@@ -289,49 +316,6 @@ GTK - example programs.
 %description examples -l pl.UTF-8
 GTK - przykładowe programy.
 
-%package media-gstreamer
-Summary:	GStreamer media backend for GTK
-Summary(pl.UTF-8):	Backend multimedialny GStreamer dla GTK
-Group:		X11/Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	gstreamer >= 1.24.0
-Requires:	gstreamer-gl-libs >= 1.24.0
-Requires:	gstreamer-plugins-bad >= 1.24.0
-Requires:	gstreamer-plugins-base >= 1.24.0
-
-%description media-gstreamer
-GStreamer media backend for GTK.
-
-%description media-gstreamer -l pl.UTF-8
-Backend multimedialny GStreamer dla GTK.
-
-%package print-cpdb
-Summary:	CPDB printing module for GTK
-Summary(pl.UTF-8):	Moduł GTK do drukowania przez CPDB
-Group:		X11/Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	cpdb-libs >= 2.0
-
-%description print-cpdb
-CPDB printing module for GTK.
-
-%description print-cpdb -l pl.UTF-8
-Moduł GTK do drukowania przez CPDB.
-
-%package cups
-Summary:	CUPS printing module for GTK
-Summary(pl.UTF-8):	Moduł GTK do drukowania przez CUPS
-Group:		X11/Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	cups-lib >= 2.0
-Obsoletes:	gtk+4-cups < 3.95
-
-%description cups
-CUPS printing module for GTK.
-
-%description cups -l pl.UTF-8
-Moduł GTK do drukowania przez CUPS.
-
 %prep
 %setup -q -n gtk-%{version}
 %patch -P0 -p1
@@ -348,6 +332,7 @@ Moduł GTK do drukowania przez CUPS.
 
 %build
 %meson \
+	%{?with_accesskit:-Daccesskit=enabled} \
 	%{?with_broadway:-Dbroadway-backend=true} \
 	%{?with_cloudproviders:-Dcloudproviders=enabled} \
 	-Dcolord=enabled \
@@ -369,7 +354,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %meson_install
 
-install -d $RPM_BUILD_ROOT%{_libdir}/gtk-4.0/%{abivers}/{immodules,inspector}
+install -d $RPM_BUILD_ROOT%{_libdir}/gtk-4.0/%{abivers}/{immodules,inspector,media,printbackends}
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 cp -a demos examples $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
@@ -413,34 +398,13 @@ exit 0
 %update_desktop_database
 %update_icon_cache hicolor
 
-%post cups
-umask 022
-gio-querymodules %{_libdir}/gtk-4.0/%{abivers}/printbackends
-
-%postun cups
-if [ "$1" != "0" ]; then
-	umask 022
-	gio-querymodules %{_libdir}/gtk-4.0/%{abivers}/printbackends
-fi
-exit 0
-
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS NEWS README.md
 %{?with_broadway:%attr(755,root,root) %{_bindir}/gtk4-broadwayd}
 %attr(755,root,root) %{_bindir}/gtk4-launch
 %attr(755,root,root) %{_libdir}/libgtk-4.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgtk-4.so.1
-
-%dir %{_libdir}/gtk-4.0
-%dir %{_libdir}/gtk-4.0/%{abivers}
-%dir %{_libdir}/gtk-4.0/%{abivers}/immodules
-%dir %{_libdir}/gtk-4.0/%{abivers}/inspector
-%if %{with gstreamer}
-%dir %{_libdir}/gtk-4.0/%{abivers}/media
-%endif
-%dir %{_libdir}/gtk-4.0/%{abivers}/printbackends
-%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-file.so
+%ghost %{_libdir}/libgtk-4.so.1
 %{_libdir}/girepository-1.0/Gdk-4.0.typelib
 %if %{with wayland}
 %{_libdir}/girepository-1.0/GdkWayland-4.0.typelib
@@ -449,11 +413,20 @@ exit 0
 %{_libdir}/girepository-1.0/Gsk-4.0.typelib
 %{_libdir}/girepository-1.0/Gtk-4.0.typelib
 
+%dir %{_libdir}/gtk-4.0
+%dir %{_libdir}/gtk-4.0/%{abivers}
+%dir %{_libdir}/gtk-4.0/%{abivers}/immodules
+%dir %{_libdir}/gtk-4.0/%{abivers}/inspector
+%dir %{_libdir}/gtk-4.0/%{abivers}/media
+%dir %{_libdir}/gtk-4.0/%{abivers}/printbackends
+
 %{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Inspector.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Settings.ColorChooser.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Settings.Debug.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Settings.EmojiChooser.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Settings.FileChooser.gschema.xml
+%dir %{_datadir}/gtk-4.0
+%{_datadir}/gtk-4.0/emoji
 %{?with_broadway:%{_mandir}/man1/gtk4-broadwayd.1*}
 %{_mandir}/man1/gtk4-launch.1*
 
@@ -469,12 +442,22 @@ exit 0
 %attr(755,root,root) %{_bindir}/gtk4-builder-tool
 %attr(755,root,root) %{_bindir}/gtk4-path-tool
 %attr(755,root,root) %{_bindir}/gtk4-query-settings
-%attr(755,root,root) %{_libdir}/libgtk-4.so
+%{_libdir}/libgtk-4.so
 %{_includedir}/gtk-4.0
+%{_datadir}/gir-1.0/Gdk-4.0.gir
+%if %{with wayland}
+%{_datadir}/gir-1.0/GdkWayland-4.0.gir
+%endif
+%{_datadir}/gir-1.0/GdkX11-4.0.gir
+%{_datadir}/gir-1.0/Gsk-4.0.gir
+%{_datadir}/gir-1.0/Gtk-4.0.gir
 %{_pkgconfigdir}/gtk4.pc
 %{_pkgconfigdir}/gtk4-atspi.pc
 %{_pkgconfigdir}/gtk4-unix-print.pc
 %{_pkgconfigdir}/gtk4-x11.pc
+%if %{with accesskit}
+%{_pkgconfigdir}/gtk4-accesskit.pc
+%endif
 %if %{with broadway}
 %{_pkgconfigdir}/gtk4-broadway.pc
 %endif
@@ -483,14 +466,10 @@ exit 0
 %endif
 %{_datadir}/gettext/its/gtk4builder.its
 %{_datadir}/gettext/its/gtk4builder.loc
-%{_datadir}/gtk-4.0
-%{_datadir}/gir-1.0/Gdk-4.0.gir
-%if %{with wayland}
-%{_datadir}/gir-1.0/GdkWayland-4.0.gir
-%endif
-%{_datadir}/gir-1.0/GdkX11-4.0.gir
-%{_datadir}/gir-1.0/Gsk-4.0.gir
-%{_datadir}/gir-1.0/Gtk-4.0.gir
+%{_datadir}/gtk-4.0/gtk4builder.rng
+%{_datadir}/gtk-4.0/valgrind
+%{bash_compdir}/gtk4-builder-tool
+%{bash_compdir}/gtk4-path-tool
 %{_mandir}/man1/gtk4-builder-tool.1*
 %{_mandir}/man1/gtk4-path-tool.1*
 %{_mandir}/man1/gtk4-query-settings.1*
@@ -525,6 +504,12 @@ exit 0
 %{_datadir}/metainfo/org.gtk.PrintEditor4.appdata.xml
 %{_datadir}/metainfo/org.gtk.WidgetFactory4.appdata.xml
 %{_datadir}/metainfo/org.gtk.gtk4.NodeEditor.appdata.xml
+%{bash_compdir}/gtk4-demo
+%{bash_compdir}/gtk4-image-tool
+%{bash_compdir}/gtk4-node-editor
+%{bash_compdir}/gtk4-print-editor
+%{bash_compdir}/gtk4-rendernode-tool
+%{bash_compdir}/gtk4-widget-factory
 %{_desktopdir}/org.gtk.Demo4.desktop
 %{_desktopdir}/org.gtk.PrintEditor4.desktop
 %{_desktopdir}/org.gtk.WidgetFactory4.desktop
@@ -546,21 +531,3 @@ exit 0
 %{_mandir}/man1/gtk4-rendernode-tool.1*
 %{_mandir}/man1/gtk4-widget-factory.1*
 %{_examplesdir}/%{name}-%{version}
-
-%if %{with gstreamer}
-%files media-gstreamer
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/media/libmedia-gstreamer.so
-%endif
-
-%if %{with cpdb}
-%files print-cpdb
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-cpdb.so
-%endif
-
-%if %{with cups}
-%files cups
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/gtk-4.0/%{abivers}/printbackends/libprintbackend-cups.so
-%endif
