@@ -1,0 +1,56 @@
+--- gtk-4.20.1/gtk/roaring/roaring.c.orig	2025-09-08 22:57:32.000000000 +0200
++++ gtk-4.20.1/gtk/roaring/roaring.c	2025-09-17 19:31:50.649239755 +0200
+@@ -12882,15 +12882,15 @@ static inline uint64_t _asm_bitset_set_l
+                                                      uint64_t card,
+                                                      const uint16_t *list,
+                                                      uint64_t length) {
+-    uint64_t offset, load, pos;
+-    uint64_t shift = 6;
++    uintptr_t offset, load, pos;
++    uintptr_t shift = 6;
+     const uint16_t *end = list + length;
+     if (!length) return card;
+     // TODO: could unroll for performance, see bitset_set_list
+     // bts is not available as an intrinsic in GCC
+     __asm volatile(
+         "1:\n"
+-        "movzwq (%[list]), %[pos]\n"
++        "movzw (%[list]), %[pos]\n"
+         "shrx %[shift], %[pos], %[offset]\n"
+         "mov (%[words],%[offset],8), %[load]\n"
+         "bts %[pos], %[load]\n"
+@@ -12907,12 +12907,12 @@ static inline uint64_t _asm_bitset_set_l
+ 
+ static inline void _asm_bitset_set_list(uint64_t *words, const uint16_t *list,
+                                         uint64_t length) {
+-    uint64_t pos;
++    uintptr_t pos;
+     const uint16_t *end = list + length;
+ 
+-    uint64_t shift = 6;
+-    uint64_t offset;
+-    uint64_t load;
++    uintptr_t shift = 6;
++    uintptr_t offset;
++    uintptr_t load;
+     for (; list + 3 < end; list += 4) {
+         pos = list[0];
+         __asm volatile(
+@@ -12964,14 +12964,14 @@ static inline void _asm_bitset_set_list(
+ static inline uint64_t _asm_bitset_clear_list(uint64_t *words, uint64_t card,
+                                               const uint16_t *list,
+                                               uint64_t length) {
+-    uint64_t offset, load, pos;
+-    uint64_t shift = 6;
++    uintptr_t offset, load, pos;
++    uintptr_t shift = 6;
+     const uint16_t *end = list + length;
+     if (!length) return card;
+     // btr is not available as an intrinsic in GCC
+     __asm volatile(
+         "1:\n"
+-        "movzwq (%[list]), %[pos]\n"
++        "movzw (%[list]), %[pos]\n"
+         "shrx %[shift], %[pos], %[offset]\n"
+         "mov (%[words],%[offset],8), %[load]\n"
+         "btr %[pos], %[load]\n"

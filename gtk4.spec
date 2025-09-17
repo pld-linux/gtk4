@@ -29,6 +29,7 @@ Group:		X11/Libraries
 Source0:	https://download.gnome.org/sources/gtk/4.20/gtk-%{version}.tar.xz
 # Source0-md5:	865e4e4e592d2e166406508d0324a146
 Patch0:		%{name}-print-backends.patch
+Patch1:		%{name}-x32.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel >= 1.3}
 %{?with_accesskit:BuildRequires:	accesskit-c-devel >= 0.17}
@@ -339,6 +340,7 @@ GTK - przykładowe programy.
 %prep
 %setup -q -n gtk-%{version}
 %patch -P0 -p1
+%patch -P1 -p1
 
 %{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' demos/gtk-demo/geninclude.py
 %{__sed} -i -e '1s,/usr/bin/env .* gjs,/usr/bin/gjs,' examples/labels.js
