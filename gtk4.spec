@@ -55,7 +55,7 @@ BuildRequires:	gcc >= 6:4.7
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.0
 BuildRequires:	gettext-tools >= 0.19.7
 %{?with_apidocs:BuildRequires:	gi-docgen >= 2021.1}
-BuildRequires:	glib2-devel >= 1:2.78.0
+BuildRequires:	glib2-devel >= 1:2.82.0
 BuildRequires:	gobject-introspection-devel >= 1.84
 BuildRequires:	graphene-devel >= 1.10.0
 %if %{with gstreamer}
@@ -83,7 +83,7 @@ BuildRequires:	libxml2-progs >= 1:2.6.31
 BuildRequires:	libxslt-progs >= 1.1.20
 BuildRequires:	meson >= 1.8.0
 BuildRequires:	ninja >= 1.5
-BuildRequires:	pango-devel >= 1:1.52.0
+BuildRequires:	pango-devel >= 1:1.56.0
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
@@ -115,7 +115,7 @@ BuildRequires:	wayland-egl-devel
 BuildRequires:	wayland-protocols >= 1.44
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
-Requires(post,postun):	glib2 >= 1:2.78.0
+Requires(post,postun):	glib2 >= 1:2.82.0
 Requires:	cairo-gobject >= 1.18.2
 %if %{with cpdb}
 Requires:	cpdb-libs >= 2.0
@@ -126,7 +126,7 @@ Requires:	cups-lib >= 2.0
 Requires:	freetype >= 1:2.7.1
 Requires:	fribidi >= 1.0.6
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.78.0
+Requires:	glib2 >= 1:2.82.0
 Requires:	graphene >= 1.10.0
 %if %{with gstreamer}
 Requires:	gstreamer >= 1.24.0
@@ -139,7 +139,7 @@ Requires:	harfbuzz-subset >= 8.4.0
 Requires:	iso-codes
 %{?with_cloudproviders:Requires:	libcloudproviders >= 0.3.1}
 Requires:	libepoxy >= 1.4
-Requires:	pango >= 1:1.52.0
+Requires:	pango >= 1:1.56.0
 Requires:	xorg-lib-libX11 >= 1.5.0
 Requires:	xorg-lib-libXi >= 1.8
 Requires:	xorg-lib-libXrandr >= 1.5.0
@@ -221,7 +221,7 @@ Summary(pl.UTF-8):	Narzędzie do uaktualniania cache'a ikon używanego przez bib
 Group:		Applications/System
 Requires:	fribidi >= 1.0.6
 Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.78.0
+Requires:	glib2 >= 1:2.82.0
 Obsoletes:	gtk+4-update-icon-cache < 3.95
 
 %description update-icon-cache
@@ -252,7 +252,7 @@ Requires:	colord-devel >= 0.1.9
 Requires:	fontconfig-devel
 Requires:	fribidi-devel >= 1.0.6
 Requires:	gdk-pixbuf2-devel >= 2.31.0
-Requires:	glib2-devel >= 1:2.78.0
+Requires:	glib2-devel >= 1:2.82.0
 Requires:	graphene-devel >= 1.10.0
 %if %{with gstreamer}
 Requires:	gstreamer-devel >= 1.24.0
@@ -271,7 +271,7 @@ Requires:	libjpeg-turbo-devel
 Requires:	libpng-devel
 Requires:	librsvg-devel >= 2.48
 Requires:	libtiff-devel >= 4
-Requires:	pango-devel >= 1:1.52.0
+Requires:	pango-devel >= 1:1.56.0
 Requires:	shared-mime-info
 Requires:	xorg-lib-libX11-devel >= 1.5.0
 Requires:	xorg-lib-libXcomposite-devel
@@ -327,7 +327,7 @@ Dokumentacja API GTK.
 Summary:	GTK - example programs
 Summary(pl.UTF-8):	GTK - programy przykładowe
 Group:		X11/Development/Libraries
-Requires(post,postun):	glib2 >= 1:2.78.0
+Requires(post,postun):	glib2 >= 1:2.82.0
 Requires:	%{name}-devel = %{version}-%{release}
 Obsoletes:	gtk+4-examples < 3.95
 
