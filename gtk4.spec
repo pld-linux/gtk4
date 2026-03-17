@@ -22,18 +22,17 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.20.3
-Release:	2
+Version:	4.22.1
+Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	https://download.gnome.org/sources/gtk/4.20/gtk-%{version}.tar.xz
-# Source0-md5:	7fe0499e3390d516f8644411ce2c3cde
+Source0:	https://download.gnome.org/sources/gtk/4.22/gtk-%{version}.tar.xz
+# Source0-md5:	c5b7ca4ab525b68702c5ec2d2ecbaec9
 Patch0:		%{name}-print-backends.patch
 Patch1:		%{name}-x32.patch
-Patch2:		%{name}-vk.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel >= 1.3}
-%{?with_accesskit:BuildRequires:	accesskit-c-devel >= 0.17}
+%{?with_accesskit:BuildRequires:	accesskit-c-devel >= 0.18}
 BuildRequires:	bash
 # cairo-gobject + cairo-pdf,cairo-ps,cairo-svg
 BuildRequires:	cairo-gobject-devel >= 1.18.2
@@ -245,7 +244,7 @@ Summary(tr.UTF-8):	GIMP araç takımı ve çizim takımı
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 %{?with_vulkan:Requires:	Vulkan-Loader-devel >= 1.3}
-%{?with_accesskit:Requires:	accesskit-c-devel >= 0.17}
+%{?with_accesskit:Requires:	accesskit-c-devel >= 0.18}
 Requires:	cairo-gobject-devel >= 1.18.2
 Requires:	colord-devel >= 0.1.9
 %{?with_cpdb:Requires:	cpdb-libs-devel >= 2.0}
@@ -342,7 +341,6 @@ GTK - przykładowe programy.
 %setup -q -n gtk-%{version}
 %patch -P0 -p1
 %patch -P1 -p1
-%patch -P2 -p1
 
 %{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' demos/gtk-demo/geninclude.py
 %{__sed} -i -e '1s,/usr/bin/env .* gjs,/usr/bin/gjs,' examples/labels.js
@@ -396,6 +394,7 @@ rm -rf $RPM_BUILD_ROOT
 %post
 /sbin/ldconfig
 %glib_compile_schemas
+%update_mime_database
 umask 022
 gio-querymodules %{_libdir}/gtk-4.0/%{abivers}/immodules
 gio-querymodules %{_libdir}/gtk-4.0/%{abivers}/printbackends
@@ -414,6 +413,7 @@ exit 0
 
 %post examples
 %glib_compile_schemas
+%update_mime_database
 %update_desktop_database
 %update_icon_cache hicolor
 
@@ -451,6 +451,7 @@ exit 0
 %{_datadir}/glib-2.0/schemas/org.gtk.gtk4.Settings.FileChooser.gschema.xml
 %dir %{_datadir}/gtk-4.0
 %{_datadir}/gtk-4.0/emoji
+%{_datadir}/mime/packages/gtk-mime.xml
 %{?with_broadway:%{_mandir}/man1/gtk4-broadwayd.1*}
 %{_mandir}/man1/gtk4-launch.1*
 
@@ -518,6 +519,7 @@ exit 0
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gtk4-demo
 %attr(755,root,root) %{_bindir}/gtk4-demo-application
+%attr(755,root,root) %{_bindir}/gtk4-icon-editor
 %attr(755,root,root) %{_bindir}/gtk4-image-tool
 %attr(755,root,root) %{_bindir}/gtk4-node-editor
 %attr(755,root,root) %{_bindir}/gtk4-print-editor
@@ -536,16 +538,20 @@ exit 0
 %{bash_compdir}/gtk4-widget-factory
 %{_desktopdir}/org.gtk.Demo4.desktop
 %{_desktopdir}/org.gtk.PrintEditor4.desktop
+%{_desktopdir}/org.gtk.Shaper.desktop
 %{_desktopdir}/org.gtk.WidgetFactory4.desktop
 %{_desktopdir}/org.gtk.gtk4.NodeEditor.desktop
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.Demo4.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.PrintEditor4.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.PrintEditor4.Devel.svg
+%{_iconsdir}/hicolor/scalable/apps/org.gtk.Shaper.svg
+%{_iconsdir}/hicolor/scalable/apps/org.gtk.Shaper.Devel.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.WidgetFactory4.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.gtk4.NodeEditor.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.gtk4.NodeEditor.Devel.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.Demo4-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.PrintEditor4-symbolic.svg
+%{_iconsdir}/hicolor/symbolic/apps/org.gtk.Shaper-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.WidgetFactory4-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.gtk4.NodeEditor-symbolic.svg
 %{_mandir}/man1/gtk4-demo.1*
