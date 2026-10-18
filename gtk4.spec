@@ -22,15 +22,14 @@ Summary(it.UTF-8):	Il toolkit per GIMP
 Summary(pl.UTF-8):	GIMP Toolkit
 Summary(tr.UTF-8):	GIMP ToolKit arayüz kitaplığı
 Name:		gtk4
-Version:	4.22.4
+Version:	4.24.1
 Release:	1
 License:	LGPL v2+
 Group:		X11/Libraries
-Source0:	https://download.gnome.org/sources/gtk/4.22/gtk-%{version}.tar.xz
-# Source0-md5:	2420b9b289937c1c9f97332470db1889
+Source0:	https://download.gnome.org/sources/gtk/4.24/gtk-%{version}.tar.xz
+# Source0-md5:	142724255fea09632a569667851ce916
 Patch0:		%{name}-print-backends.patch
 Patch1:		%{name}-x32.patch
-Patch2:		%{name}-vk.patch
 URL:		https://www.gtk.org/
 %{?with_vulkan:BuildRequires:	Vulkan-Loader-devel >= 1.3}
 %{?with_accesskit:BuildRequires:	accesskit-c-devel >= 0.18}
@@ -56,16 +55,16 @@ BuildRequires:	gcc >= 6:4.7
 BuildRequires:	gdk-pixbuf2-devel >= 2.31.0
 BuildRequires:	gettext-tools >= 0.19.7
 %{?with_apidocs:BuildRequires:	gi-docgen >= 2021.1}
-BuildRequires:	glib2-devel >= 1:2.82.0
+BuildRequires:	glib2-devel >= 1:2.89.3
 BuildRequires:	gobject-introspection-devel >= 1.84
 BuildRequires:	graphene-devel >= 1.10.0
 %if %{with gstreamer}
-BuildRequires:	gstreamer-devel >= 1.24.0
-BuildRequires:	gstreamer-gl-devel >= 1.24.0
+BuildRequires:	gstreamer-devel >= 1.28.0
+BuildRequires:	gstreamer-gl-devel >= 1.28.0
 # pkgconfig(gstreamer-allocators-1.0)
-BuildRequires:	gstreamer-plugins-base-devel >= 1.24.0
+BuildRequires:	gstreamer-plugins-base-devel >= 1.28.0
 # pkgconfig(gstreamer-play-1.0)
-BuildRequires:	gstreamer-plugins-bad-devel >= 1.24.0
+BuildRequires:	gstreamer-plugins-bad-devel >= 1.28.0
 %endif
 BuildRequires:	harfbuzz-devel >= 8.4.0
 BuildRequires:	harfbuzz-subset-devel >= 8.4.0
@@ -113,46 +112,46 @@ BuildRequires:	xz
 # wayland-client, wayland-cursor, wayland-scanner
 BuildRequires:	wayland-devel >= 1.24.0
 BuildRequires:	wayland-egl-devel
-BuildRequires:	wayland-protocols >= 1.44
+BuildRequires:	wayland-protocols >= 1.48
 BuildRequires:	xorg-lib-libxkbcommon-devel >= 0.2.0
 %endif
-Requires(post,postun):	glib2 >= 1:2.82.0
-Requires:	cairo-gobject >= 1.18.2
+Requires(post,postun):	glib2 >= 1:2.89.3
+Requires:	cairo-gobject%{?_isa} >= 1.18.2
 %if %{with cpdb}
-Requires:	cpdb-libs >= 2.0
+Requires:	cpdb-libs%{?_isa} >= 2.0
 %endif
 %if %{with cups}
-Requires:	cups-lib >= 2.0
+Requires:	cups-lib%{?_isa} >= 2.0
 %endif
-Requires:	freetype >= 1:2.7.1
-Requires:	fribidi >= 1.0.6
-Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.82.0
-Requires:	graphene >= 1.10.0
+Requires:	freetype%{?_isa} >= 1:2.7.1
+Requires:	fribidi%{?_isa} >= 1.0.6
+Requires:	gdk-pixbuf2%{?_isa} >= 2.31.0
+Requires:	glib2%{?_isa} >= 1:2.89.3
+Requires:	graphene%{?_isa} >= 1.10.0
 %if %{with gstreamer}
-Requires:	gstreamer >= 1.24.0
-Requires:	gstreamer-gl-libs >= 1.24.0
-Requires:	gstreamer-plugins-bad >= 1.24.0
-Requires:	gstreamer-plugins-base >= 1.24.0
+Requires:	gstreamer%{?_isa} >= 1.28.0
+Requires:	gstreamer-gl-libs%{?_isa} >= 1.28.0
+Requires:	gstreamer-plugins-bad%{?_isa} >= 1.28.0
+Requires:	gstreamer-plugins-base%{?_isa} >= 1.28.0
 %endif
-Requires:	harfbuzz >= 8.4.0
-Requires:	harfbuzz-subset >= 8.4.0
+Requires:	harfbuzz%{?_isa} >= 8.4.0
+Requires:	harfbuzz-subset%{?_isa} >= 8.4.0
 Requires:	iso-codes
-%{?with_cloudproviders:Requires:	libcloudproviders >= 0.3.1}
-Requires:	libepoxy >= 1.4
-Requires:	pango >= 1:1.56.0
-Requires:	xorg-lib-libX11 >= 1.5.0
-Requires:	xorg-lib-libXi >= 1.8
-Requires:	xorg-lib-libXrandr >= 1.5.0
+%{?with_cloudproviders:Requires:	libcloudproviders%{?_isa} >= 0.3.1}
+Requires:	libepoxy%{?_isa} >= 1.4
+Requires:	pango%{?_isa} >= 1:1.56.0
+Requires:	xorg-lib-libX11%{?_isa} >= 1.5.0
+Requires:	xorg-lib-libXi%{?_isa} >= 1.8
+Requires:	xorg-lib-libXrandr%{?_isa} >= 1.5.0
 %if %{with wayland}
-Requires:	wayland >= 1.24.0
-Requires:	xorg-lib-libxkbcommon >= 0.2.0
+Requires:	wayland%{?_isa} >= 1.24.0
+Requires:	xorg-lib-libxkbcommon%{?_isa} >= 0.2.0
 %endif
 # evince is used as gtk-print-preview-command by default
 Suggests:	evince-backend-pdf
 %if %{with cups}
 # cups is used by default if gtk is built with cups
-Suggests:	%{name}-cups = %{version}-%{release}
+Suggests:	%{name}-cups%{?_isa} = %{version}-%{release}
 %endif
 Obsoletes:	gtk+4 < 3.95
 Obsoletes:	gtk+4-cups < 3.95
@@ -220,9 +219,9 @@ programlarca da kullanılmaktadır.
 Summary:	Utility to update icon cache used by GTK library
 Summary(pl.UTF-8):	Narzędzie do uaktualniania cache'a ikon używanego przez bibliotekę GTK
 Group:		Applications/System
-Requires:	fribidi >= 1.0.6
-Requires:	gdk-pixbuf2 >= 2.31.0
-Requires:	glib2 >= 1:2.82.0
+Requires:	fribidi%{?_isa} >= 1.0.6
+Requires:	gdk-pixbuf2%{?_isa} >= 2.31.0
+Requires:	glib2%{?_isa} >= 1:2.89.3
 Obsoletes:	gtk+4-update-icon-cache < 3.95
 
 %description update-icon-cache
@@ -243,53 +242,53 @@ Summary(it.UTF-8):	GIMP Toolkit and GIMP Drawing Kit
 Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja do GTK
 Summary(tr.UTF-8):	GIMP araç takımı ve çizim takımı
 Group:		X11/Development/Libraries
-Requires:	%{name} = %{version}-%{release}
-%{?with_vulkan:Requires:	Vulkan-Loader-devel >= 1.3}
-%{?with_accesskit:Requires:	accesskit-c-devel >= 0.18}
-Requires:	cairo-gobject-devel >= 1.18.2
-Requires:	colord-devel >= 0.1.9
-%{?with_cpdb:Requires:	cpdb-libs-devel >= 2.0}
-%{?with_cups:Requires:	cups-devel >= 1:2.0}
-Requires:	fontconfig-devel
-Requires:	fribidi-devel >= 1.0.6
-Requires:	gdk-pixbuf2-devel >= 2.31.0
-Requires:	glib2-devel >= 1:2.82.0
-Requires:	graphene-devel >= 1.10.0
+Requires:	%{name}%{?_isa} = %{version}-%{release}
+%{?with_vulkan:Requires:	Vulkan-Loader-devel%{?_isa} >= 1.3}
+%{?with_accesskit:Requires:	accesskit-c-devel%{?_isa} >= 0.18}
+Requires:	cairo-gobject-devel%{?_isa} >= 1.18.2
+Requires:	colord-devel%{?_isa} >= 0.1.9
+%{?with_cpdb:Requires:	cpdb-libs-devel%{?_isa} >= 2.0}
+%{?with_cups:Requires:	cups-devel%{?_isa} >= 1:2.0}
+Requires:	fontconfig-devel%{?_isa}
+Requires:	fribidi-devel%{?_isa} >= 1.0.6
+Requires:	gdk-pixbuf2-devel%{?_isa} >= 2.31.0
+Requires:	glib2-devel%{?_isa} >= 1:2.89.3
+Requires:	graphene-devel%{?_isa} >= 1.10.0
 %if %{with gstreamer}
-Requires:	gstreamer-devel >= 1.24.0
-Requires:	gstreamer-gl-devel >= 1.24.0
+Requires:	gstreamer-devel%{?_isa} >= 1.24.0
+Requires:	gstreamer-gl-devel%{?_isa} >= 1.24.0
 # pkgconfig(gstreamer-allocators-1.0)
-Requires:	gstreamer-plugins-base-devel >= 1.24.0
+Requires:	gstreamer-plugins-base-devel%{?_isa} >= 1.24.0
 # pkgconfig(gstreamer-play-1.0)
-Requires:	gstreamer-plugins-bad-devel >= 1.24.0
+Requires:	gstreamer-plugins-bad-devel%{?_isa} >= 1.24.0
 %endif
-Requires:	harfbuzz-devel >= 8.4.0
-Requires:	harfbuzz-subset-devel >= 8.4.0
-%{?with_cloudproviders:Requires:	libcloudproviders-devel >= 0.3.1}
-Requires:	libdrm-devel
-Requires:	libepoxy-devel >= 1.4
-Requires:	libjpeg-turbo-devel
-Requires:	libpng-devel
-Requires:	librsvg-devel >= 2.48
-Requires:	libtiff-devel >= 4
-Requires:	pango-devel >= 1:1.56.0
+Requires:	harfbuzz-devel%{?_isa} >= 8.4.0
+Requires:	harfbuzz-subset-devel%{?_isa} >= 8.4.0
+%{?with_cloudproviders:Requires:	libcloudproviders-devel%{?_isa} >= 0.3.1}
+Requires:	libdrm-devel%{?_isa}
+Requires:	libepoxy-devel%{?_isa} >= 1.4
+Requires:	libjpeg-turbo-devel%{?_isa}
+Requires:	libpng-devel%{?_isa}
+Requires:	librsvg-devel%{?_isa} >= 2.48
+Requires:	libtiff-devel%{?_isa} >= 4
+Requires:	pango-devel%{?_isa} >= 1:1.56.0
 Requires:	shared-mime-info
-Requires:	xorg-lib-libX11-devel >= 1.5.0
-Requires:	xorg-lib-libXcomposite-devel
-Requires:	xorg-lib-libXcursor-devel
-Requires:	xorg-lib-libXdamage-devel
-Requires:	xorg-lib-libXext-devel
-Requires:	xorg-lib-libXfixes-devel
-Requires:	xorg-lib-libXi-devel >= 1.8
-Requires:	xorg-lib-libXinerama-devel
-Requires:	xorg-lib-libXrandr-devel >= 1.5.0
+Requires:	xorg-lib-libX11-devel%{?_isa} >= 1.5.0
+Requires:	xorg-lib-libXcomposite-devel%{?_isa}
+Requires:	xorg-lib-libXcursor-devel%{?_isa}
+Requires:	xorg-lib-libXdamage-devel%{?_isa}
+Requires:	xorg-lib-libXext-devel%{?_isa}
+Requires:	xorg-lib-libXfixes-devel%{?_isa}
+Requires:	xorg-lib-libXi-devel%{?_isa} >= 1.8
+Requires:	xorg-lib-libXinerama-devel%{?_isa}
+Requires:	xorg-lib-libXrandr-devel%{?_isa} >= 1.5.0
 %if %{with wayland}
-Requires:	wayland-devel >= 1.24.0
-Requires:	wayland-egl-devel
+Requires:	wayland-devel%{?_isa} >= 1.24.0
+Requires:	wayland-egl-devel%{?_isa}
 Requires:	wayland-protocols >= 1.44
-Requires:	xorg-lib-libxkbcommon-devel >= 0.2.0
+Requires:	xorg-lib-libxkbcommon-devel%{?_isa} >= 0.2.0
 %endif
-Requires:	zlib-devel
+Requires:	zlib-devel%{?_isa}
 Obsoletes:	gtk+4-devel < 3.95
 
 %description devel
@@ -302,7 +301,7 @@ Pliki nagłówkowe i dokumentacja do bibliotek GTK.
 Summary:	GTK static libraries
 Summary(pl.UTF-8):	Biblioteki statyczne GTK
 Group:		X11/Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-devel%{?_isa} = %{version}-%{release}
 Obsoletes:	gtk+4-static < 3.95
 
 %description static
@@ -328,8 +327,8 @@ Dokumentacja API GTK.
 Summary:	GTK - example programs
 Summary(pl.UTF-8):	GTK - programy przykładowe
 Group:		X11/Development/Libraries
-Requires(post,postun):	glib2 >= 1:2.82.0
-Requires:	%{name}-devel = %{version}-%{release}
+Requires(post,postun):	glib2 >= 1:2.89.3
+Requires:	%{name}-devel%{?_isa} = %{version}-%{release}
 Obsoletes:	gtk+4-examples < 3.95
 
 %description examples
@@ -342,7 +341,6 @@ GTK - przykładowe programy.
 %setup -q -n gtk-%{version}
 %patch -P0 -p1
 %patch -P1 -p1
-%patch -P2 -p1
 
 %{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' demos/gtk-demo/geninclude.py
 %{__sed} -i -e '1s,/usr/bin/env .* gjs,/usr/bin/gjs,' examples/labels.js
@@ -459,9 +457,7 @@ exit 0
 
 %files update-icon-cache
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/gtk4-encode-symbolic-svg
 %attr(755,root,root) %{_bindir}/gtk4-update-icon-cache
-%{_mandir}/man1/gtk4-encode-symbolic-svg.1*
 %{_mandir}/man1/gtk4-update-icon-cache.1*
 
 %files devel
@@ -521,7 +517,6 @@ exit 0
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gtk4-demo
 %attr(755,root,root) %{_bindir}/gtk4-demo-application
-%attr(755,root,root) %{_bindir}/gtk4-icon-editor
 %attr(755,root,root) %{_bindir}/gtk4-image-tool
 %attr(755,root,root) %{_bindir}/gtk4-node-editor
 %attr(755,root,root) %{_bindir}/gtk4-print-editor
@@ -540,20 +535,16 @@ exit 0
 %{bash_compdir}/gtk4-widget-factory
 %{_desktopdir}/org.gtk.Demo4.desktop
 %{_desktopdir}/org.gtk.PrintEditor4.desktop
-%{_desktopdir}/org.gtk.Shaper.desktop
 %{_desktopdir}/org.gtk.WidgetFactory4.desktop
 %{_desktopdir}/org.gtk.gtk4.NodeEditor.desktop
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.Demo4.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.PrintEditor4.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.PrintEditor4.Devel.svg
-%{_iconsdir}/hicolor/scalable/apps/org.gtk.Shaper.svg
-%{_iconsdir}/hicolor/scalable/apps/org.gtk.Shaper.Devel.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.WidgetFactory4.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.gtk4.NodeEditor.svg
 %{_iconsdir}/hicolor/scalable/apps/org.gtk.gtk4.NodeEditor.Devel.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.Demo4-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.PrintEditor4-symbolic.svg
-%{_iconsdir}/hicolor/symbolic/apps/org.gtk.Shaper-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.WidgetFactory4-symbolic.svg
 %{_iconsdir}/hicolor/symbolic/apps/org.gtk.gtk4.NodeEditor-symbolic.svg
 %{_mandir}/man1/gtk4-demo.1*
